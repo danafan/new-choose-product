@@ -6,7 +6,7 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/': {
-				target: 'http://selectiontest.92nu.com',
+				target: 'http://semetest.92nu.com',
 				ws: true,
 				changOlrigin: true,		
 			}

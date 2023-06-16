@@ -28,39 +28,11 @@
 			</div>
 			<div class="cate">{{info.style_name}}</div>
 		</div>
-		<div class="desc">&nbsp{{info.title}}</div>
+		<div class="desc">{{info.title}}</div>
 		<div class="code_time">
-			<el-tooltip class="item" effect="dark" placement="top-start">
-				<div slot="content">
-					{{info.sstyle_name}}
-					<div v-if="info.i_id != ''">{{`普通：${info.i_id}`}}</div>
-					<div v-if="info.bd_i_id != ''">{{`BD：${info.bd_i_id}`}}</div>
-				</div>
-				<div class="code">
-					<span>{{info.sstyle_name}}</span>
-					<span v-if="info.i_id != '' || info.bd_i_id != ''">（</span>
-					<span>{{info.i_id != ''?`普通:${info.i_id}`:""}}</span>
-					<span>{{info.bd_i_id != ''?`BD:${info.bd_i_id}`:""}}</span>
-					<span v-if="info.i_id != '' || info.bd_i_id != ''">）</span>
-				</div>
-			</el-tooltip>
+			<div>{{info.sstyle_name}}</div>
 			<div class="time">{{info.new_time_name}}</div>
 		</div>
-		<div class="line mt-6"></div>
-		<div class="flex jsb mt-6 f12">
-			<div class="flex ac">
-				<div class="dark">40%毛利：</div>
-				<div class="primary_color">¥{{info.price_40}}</div>
-			</div>
-			<div class="flex ac">
-				<div class="dark">50%毛利：</div>
-				<div class="primary_color">¥{{info.price_50}}</div>
-			</div>
-		</div>
-		<div class="flex ac mt-6 f12">
-				<div class="dark">控价：</div>
-				<div class="primary_color">¥{{info.price_control}}</div>
-			</div>
 		<div class="line mt-6"></div>
 		<div class="set_row">
 			<div class="button_row">
@@ -71,30 +43,16 @@
 				<div class="yjr" v-else @click.stop>已加入</div>
 				<div class="xk" :class="{'drak_back':info.cost_price == ''}" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
-			<div class="flex ac">
-				<div class="grade_name">{{info.grade_name}}</div>
-				<div class="store_name">{{info.supplier_name}}</div>
+			<div class="flex ac f12">
+				<div class="dark">控价：</div>
+				<div class="primary_color">¥{{info.price_control}}</div>
 			</div>
 		</div>
 		<div class="line mt-6"></div>
-		<div class="num_row">
-			<div>浏览：{{info.views_num}}</div>
-			<div>选中：{{info.select_num}}</div>
-			<div>30天销量：{{info.sales_num_all}}</div>
-		</div>
-		<div class="num_row">
-			<div>7天销量：{{info.sales_num_7}}</div>
-		</div>
-		<div class="line mt-6"></div>
 		<div class="img_back">
-			<div class="img_list">
-				<img class="info_icon" src="../static/tui_icon.png" v-if="info.supply_return_goods == 1">
-				<img class="info_icon" src="../static/ru_icon.png" v-if="info.supply_warehousing == 1">
-				<img class="info_icon" src="../static/huan_icon.png" v-if="info.supply_exchange_goods == 1">
-				<img class="info_icon" src="../static/pai_icon.png" v-if="info.supply_photograph == 1">
-				<img class="info_icon" src="../static/dai_icon.png" v-if="info.supply_replace_send == 1">
-				<img class="info_icon" src="../static/xian_icon.png" v-if="info.supply_monthly_settlement == 0">
-				<img class="info_icon" src="../static/yue_icon.png" v-if="info.supply_monthly_settlement == 1">
+			<div class="num_row">
+				<div>浏览：{{info.views_num}}</div>
+				<div>选中：{{info.select_num}}</div>
 			</div>
 			<div class="feek_back" @click.stop="feekback_dialog = true">反馈</div>
 		</div>
@@ -110,22 +68,6 @@
 				<div class="top_form">
 					<div class="form_item">
 						<div class="value">{{info.title}}</div>
-					</div>
-					<div class="form_item">
-						<div class="lable">供应商：</div>
-						<div class="value">{{info.supplier_name}}</div>
-					</div>
-					<div class="form_item" v-if="info.supplier_ksbm != ''">
-						<div class="lable">供应商款式编码：</div>
-						<div class="value">{{info.supplier_ksbm}}</div>
-					</div>
-					<div class="form_item" v-if="info.i_id != ''">
-						<div class="lable">款式编码：</div>
-						<div class="value">{{info.i_id}}</div>
-					</div>
-					<div class="form_item" v-if="info.bd_i_id != ''">
-						<div class="lable">BD款式编码：</div>
-						<div class="value">{{info.bd_i_id}}</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">价格：</div>
@@ -256,64 +198,76 @@
 </div>
 </template>
 <style type="text/css">
-.popover_image{
-	height: 400px!important;
-	width: 400px!important;
-}
+	.popover_image{
+		height: 400px!important;
+		width: 400px!important;
+	}
 </style>
 <style lang="less" scoped>
-.goods_item{
-	margin-bottom: 20rem;
-	border:1px solid #EDEDED;
-	width: 265rem;
-	cursor:pointer;
-	.image_box{
-		position: relative;
-		width: 263rem;
-		height: 263rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		.goods_img{
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-		}
-	}
-	.goods_info{
-		padding: 8rem 10rem;
-		.price_cate{
+	.goods_item{
+		margin-bottom: 20rem;
+		border:1px solid #EDEDED;
+		width: 265rem;
+		cursor:pointer;
+		.image_box{
+			position: relative;
+			width: 263rem;
+			height: 263rem;
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-			.price{
-				display: flex;
-				align-items: flex-end;
-				color: var(--color);
-				font-weight: bold;
-				.p_icon{
-					position: relative;
-					top: -1px;
-					font-size:14rem;
-				}
-				.p_value{
-					margin-left: 1rem;
-					font-size:18rem;
-				}
+			justify-content: center;
+			.goods_img{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
 			}
-			.style_row{
-				flex: 1;
+		}
+		.goods_info{
+			padding: 8rem 10rem;
+			.price_cate{
 				display: flex;
 				align-items: center;
-				.goods_tag{
-					width: 22rem;
-					height: 22rem;
+				justify-content: space-between;
+				.price{
+					display: flex;
+					align-items: flex-end;
+					color: var(--color);
+					font-weight: bold;
+					.p_icon{
+						position: relative;
+						top: -1px;
+						font-size:14rem;
+					}
+					.p_value{
+						margin-left: 1rem;
+						font-size:18rem;
+					}
+				}
+				.style_row{
+					flex: 1;
+					display: flex;
+					align-items: center;
+					.goods_tag{
+						width: 22rem;
+						height: 22rem;
+					}
+				}
+				.cate{
+					font-size: 12rem;
+					color: #333333;
+					word-break: break-all;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					display: -webkit-box;
+					-webkit-line-clamp: 1;
+					-webkit-box-orient: vertical;
 				}
 			}
-			.cate{
-				font-size: 12rem;
+			.desc{
+				margin-top: 6rem;
+				font-size:12rem;
 				color: #333333;
 				word-break: break-all;
 				text-overflow: ellipsis;
@@ -322,266 +276,253 @@
 				-webkit-line-clamp: 1;
 				-webkit-box-orient: vertical;
 			}
-		}
-		.desc{
-			margin-top: 6rem;
-			font-size:12rem;
-			color: #333333;
-			word-break: break-all;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			display: -webkit-box;
-			-webkit-line-clamp: 1;
-			-webkit-box-orient: vertical;
-		}
-		.code_time{
-			margin-top: 6rem;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			font-size:12rem;
-			color: #999999;
-			.code{
-				flex:1;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-			.time{
-				margin-left: 5px;
-				white-space:normal;
-			}
-		}
-		.line{
-			background:#F0F0F0;
-			width: 100%;
-			height: 1px;
-		}
-		.mt-6{
-			margin-top: 6px;
-		}
-		.f12{
-			font-size: 12px;
-		}
-		.dark{
-			color: #666666;
-		}
-		.primary_color{
-			color: #F37605;
-		}
-		.set_row{
-			margin-top: 10rem;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			.button_row{
+			.code_time{
+				margin-top: 6rem;
 				display: flex;
 				align-items: center;
-				.add{
-					border:1px solid var(--color);
-					border-radius: 2rem;
-					padding: 0 3rem;
-					height: 20rem;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					font-size: 12rem;
-					color: var(--color);
-					.add_car{
-						margin-right: 4rem;
-						width: 12rem;
-						height: 12rem;
-					}
+				justify-content: space-between;
+				font-size:12rem;
+				color: #999999;
+				.code{
+					flex:1;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 				}
-				.yjr{
-					font-size: 12rem;
-					color: #999999;
-				}
-				.xk{
-					margin-left: 10rem;
-					border-radius: 2rem;
-					background: var(--color);
-					padding: 0 3rem;
-					height: 20rem;
-					line-height: 20rem;
-					font-size: 12rem;
-					color: #ffffff;
-				}
-				.drak_back{
-					background-color: #999999;
+				.time{
+					margin-left: 5px;
+					white-space:normal;
 				}
 			}
-			.grade_name{
-				font-weight: normal;
-				color:#F35005;
-				font-size: 12rem;
-			}
-			.store_name{
-				margin-left: 4rem;
-				font-size: 12rem;
-				color: var(--color);
-				word-break: break-all;
-				text-overflow: ellipsis;
-				overflow: hidden;
-				display: -webkit-box;
-				-webkit-line-clamp: 1;
-				-webkit-box-orient: vertical;
-			}
-		}
-		.num_row{
-			margin-top: 10rem;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			font-size: 12rem;
-			color: #999999;
-		}
-		.img_back{
-			margin-top: 10rem;
-			display: flex;
-			align-items: center;
-			.img_list{
-				flex:1;
-				display: flex;
-				.info_icon{
-					margin-right: 6rem;
-					width: 20rem;
-					height: 20rem;
-				}
-			}
-			.feek_back{
-				font-size: 12rem;
-				color: #37A3FF;
-			}
-		}
-	}
-}
-.select_content{
-	padding: 18rem;
-	.content_top{
-		display: flex;
-		.top_form{
-			flex:1;
-			.form_item{
-				display: flex;
-				align-items: center;
-				margin-bottom:12rem;
-				font-size:14rem;
-				.lable{
-					color: #666666;
-					span{
-						color: red;
-					}
-				}
-				.value{
-					color: #333333;
-					font-weight: 500;
-				}
-			}
-		}
-		.banner{
-			border:1px solid #D9D9D9;
-			padding: 10rem;
-			width: 260rem;
-			height: 290rem;
-			display: flex;
-			flex-direction: column;
-			.image{
-				width: 240rem;
-				height: 240rem;
-			}
-			.indicator_box{
-				flex:1;
-				display: flex;
-				align-items: center;
-				justify-content: space-evenly;
-				.indicator{
-					border: 1px solid #979797;
-					background: #D8D8D8;
-					border-radius: 50%;
-					width: 16rem;
-					height: 16rem;
-				}
-				.is_active{
-					border: 1px solid var(--color);
-					background: var(--color);
-				}
-			}
-		}
-	}
-}
-.feekback_content{
-	padding: 10rem 20rem;
-	.upload_title{
-		margin-top: 20rem;
-		margin-bottom:10rem;
-		font-size:14rem;
-		color: #333333;
-		span{
-			color: red;
-		}
-	}
-	.upload_toast{
-		margin-top: 10rem;
-		font-size:14rem;
-		color: #666666;
-	}
-}
-.image_content{
-	padding: 10rem 20rem;
-	.tab_row{
-		margin-bottom: 13rem;
-		padding-left: 30rem;
-		border-radius:2rem;
-		border:1px solid #FFC998;
-		background: #FFFCFA;
-		width: 100%;
-		height: 36rem;
-		display: flex;
-		.tab_item{
-			margin-right: 68rem;
-			position: relative;
-			height: 36rem;
-			display: flex;
-			align-items: center;
-			font-size:14rem;
-			color:#333333;
-			.active_line{
-				background: #FFC998;
-				position: absolute;
-				left: 0;
-				bottom:3rem;
+			.line{
+				background:#F0F0F0;
 				width: 100%;
 				height: 1px;
 			}
+			.mt-6{
+				margin-top: 6px;
+			}
+			.f12{
+				font-size: 12px;
+			}
+			.dark{
+				color: #666666;
+			}
+			.primary_color{
+				color: #F37605;
+			}
+			.set_row{
+				margin-top: 10rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.button_row{
+					display: flex;
+					align-items: center;
+					.add{
+						border:1px solid var(--color);
+						border-radius: 2rem;
+						padding: 0 3rem;
+						height: 20rem;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						font-size: 12rem;
+						color: var(--color);
+						.add_car{
+							margin-right: 4rem;
+							width: 12rem;
+							height: 12rem;
+						}
+					}
+					.yjr{
+						font-size: 12rem;
+						color: #999999;
+					}
+					.xk{
+						margin-left: 10rem;
+						border-radius: 2rem;
+						background: var(--color);
+						padding: 0 3rem;
+						height: 20rem;
+						line-height: 20rem;
+						font-size: 12rem;
+						color: #ffffff;
+					}
+					.drak_back{
+						background-color: #999999;
+					}
+				}
+				.grade_name{
+					font-weight: normal;
+					color:#F35005;
+					font-size: 12rem;
+				}
+				.store_name{
+					margin-left: 4rem;
+					font-size: 12rem;
+					color: var(--color);
+					word-break: break-all;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					display: -webkit-box;
+					-webkit-line-clamp: 1;
+					-webkit-box-orient: vertical;
+				}
+			}
+			.num_row{
+				display: flex;
+				align-items: center;
+				font-size: 12rem;
+				color: #999999;
+			}
+			.img_back{
+				margin-top: 10rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.img_list{
+					flex:1;
+					display: flex;
+					.info_icon{
+						margin-right: 6rem;
+						width: 20rem;
+						height: 20rem;
+					}
+				}
+				.feek_back{
+					font-size: 12rem;
+					color: #37A3FF;
+				}
+			}
 		}
-		.active_tab_item{
-			color: var(--color);
+	}
+	.select_content{
+		padding: 18rem;
+		.content_top{
+			display: flex;
+			.top_form{
+				flex:1;
+				.form_item{
+					display: flex;
+					align-items: center;
+					margin-bottom:12rem;
+					font-size:14rem;
+					.lable{
+						color: #666666;
+						span{
+							color: red;
+						}
+					}
+					.value{
+						color: #333333;
+						font-weight: 500;
+					}
+				}
+			}
+			.banner{
+				border:1px solid #D9D9D9;
+				padding: 10rem;
+				width: 260rem;
+				height: 290rem;
+				display: flex;
+				flex-direction: column;
+				.image{
+					width: 240rem;
+					height: 240rem;
+				}
+				.indicator_box{
+					flex:1;
+					display: flex;
+					align-items: center;
+					justify-content: space-evenly;
+					.indicator{
+						border: 1px solid #979797;
+						background: #D8D8D8;
+						border-radius: 50%;
+						width: 16rem;
+						height: 16rem;
+					}
+					.is_active{
+						border: 1px solid var(--color);
+						background: var(--color);
+					}
+				}
+			}
 		}
 	}
-	.source_url{
-		margin-bottom: 10rem;
-		font-size:14rem;
-		color: #333333;
-		cursor: initial;
-	}
-	.more_image{
-		display: flex;
-		flex-wrap: wrap;
-		.more_image_item{
-			margin-right: 25rem;
-			margin-bottom: 25rem;
-			width: 220rem;
-			height: 220rem;
+	.feekback_content{
+		padding: 10rem 20rem;
+		.upload_title{
+			margin-top: 20rem;
+			margin-bottom:10rem;
+			font-size:14rem;
+			color: #333333;
+			span{
+				color: red;
+			}
+		}
+		.upload_toast{
+			margin-top: 10rem;
+			font-size:14rem;
+			color: #666666;
 		}
 	}
-}
-.toast_content{
-	padding: 10rem 20rem;
-	.toast_text{
-		margin-bottom: 15rem;
+	.image_content{
+		padding: 10rem 20rem;
+		.tab_row{
+			margin-bottom: 13rem;
+			padding-left: 30rem;
+			border-radius:2rem;
+			border:1px solid #FFC998;
+			background: #FFFCFA;
+			width: 100%;
+			height: 36rem;
+			display: flex;
+			.tab_item{
+				margin-right: 68rem;
+				position: relative;
+				height: 36rem;
+				display: flex;
+				align-items: center;
+				font-size:14rem;
+				color:#333333;
+				.active_line{
+					background: #FFC998;
+					position: absolute;
+					left: 0;
+					bottom:3rem;
+					width: 100%;
+					height: 1px;
+				}
+			}
+			.active_tab_item{
+				color: var(--color);
+			}
+		}
+		.source_url{
+			margin-bottom: 10rem;
+			font-size:14rem;
+			color: #333333;
+			cursor: initial;
+		}
+		.more_image{
+			display: flex;
+			flex-wrap: wrap;
+			.more_image_item{
+				margin-right: 25rem;
+				margin-bottom: 25rem;
+				width: 220rem;
+				height: 220rem;
+			}
+		}
 	}
-}
+	.toast_content{
+		padding: 10rem 20rem;
+		.toast_text{
+			margin-bottom: 15rem;
+		}
+	}
 </style>
 <script>
 	import resource from '../api/resource.js'
@@ -630,7 +571,7 @@
 			//单个商品
 			info:{
 				type:Object,
-				default:{}
+			default:{}
 			}
 		},
 		watch:{
@@ -863,6 +804,10 @@
 				resource.moreImgStyle(arg).then(res => {
 					if(res.data.code == 1){
 						let style_data = res.data.data;
+						if(style_data.length == 0){
+							this.$message.warning('没有更多图片!')
+							return;
+						}
 						let img_arr = [];
 						style_data.img.map(item => {
 							img_arr.push(this.domain + item)
@@ -962,27 +907,27 @@
 				this.feedback_img = [];	//上传的图片列表
 			},
     		//点击跳转详情
-    		getDetail(){
-    			if(!this.isClick) return;
-    			let active_path = `/goods_detail?style_id=${this.info.style_id}`;
-    			const routeData = this.$router.resolve(active_path);
-    			window.open(routeData.href);
-    		},
+			getDetail(){
+				if(!this.isClick) return;
+				let active_path = `/goods_detail?style_id=${this.info.style_id}`;
+				const routeData = this.$router.resolve(active_path);
+				window.open(routeData.href);
+			},
     		//点击查看网盘
-    		windowOpen(url){
-    			if(!this.or_net_disk_address || this.or_net_disk_address.indexOf('https://pan.baidu.com') == -1){
-    				this.$message.warning('该地址不是网盘地址格式!')
-    			}else{
-    				window.open(url)
-    			}
-    			
-    		}
-    	},
-    	components:{
-    		QuillEditor,
-    		UploadFile
-    	}
-    }
+			windowOpen(url){
+				if(!this.or_net_disk_address || this.or_net_disk_address.indexOf('https://pan.baidu.com') == -1){
+					this.$message.warning('该地址不是网盘地址格式!')
+				}else{
+					window.open(url)
+				}
+
+			}
+		},
+		components:{
+			QuillEditor,
+			UploadFile
+		}
+	}
 </script>
 
 

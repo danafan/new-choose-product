@@ -69,6 +69,12 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="是否外部商家：">
+					<el-select v-model="is_outer_user" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
 				<el-form-item label="需求店铺：">
 					<el-select style="width: 330px" v-model="shop_code" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
@@ -534,6 +540,7 @@
 				select_main_dept_id:[], //所有部门列表
 				user_list:[],			//所有用户列表
 				select_userid:[],		//选中的用户列表
+				is_outer_user:"",		//是否外部商家
 				store_list:[],			//店铺列表
 				shop_code:[],			//选中的店铺
 				supplier_list:[],		//供应商列表
@@ -810,6 +817,7 @@
 					status:this.status_id,
 					select_userid:this.select_userid.join(','),
 					select_main_dept_id:this.select_main_dept_id.join(','),
+					is_outer_user:this.is_outer_user,
 					shop_code:this.shop_code.join(','),
 					supplier_id:this.supplier_ids.join(','),
 					category_id:this.category_ids.join(','),
@@ -943,6 +951,7 @@
 						status:this.status_id,
 						select_userid:this.select_userid.join(','),
 						select_main_dept_id:this.select_main_dept_id.join(','),
+						is_outer_user:this.is_outer_user,
 						shop_code:this.shop_code.join(','),
 						supplier_id:this.supplier_ids.join(','),
 						category_id:this.category_ids.join(','),

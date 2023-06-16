@@ -8,24 +8,11 @@
 			</div>
 			<div class="content_right">
 				<div class="content">
-          <!-- <div class="tab_row">
-            <div class="tab_item" @click="active_tab = 'gys'">
-              <div class="tab_text" :class="{'active_tab_text':active_tab == 'gys'}">供应商登录</div>
-              <div class="active_line" v-if="active_tab == 'gys'"></div>
-            </div>
-            <div class="tab_item" @click="active_tab = 'sm'">
-              <div class="tab_text" :class="{'active_tab_text':active_tab == 'sm'}">扫码登录</div>
-              <div class="active_line" v-if="active_tab == 'sm'"></div>
-            </div>
-          </div> -->
-          <div class="text">{{active_tab == 'gys'?'用户名密码':'钉钉扫码一键'}}登录</div>
-          <div class="gys_box" v-if="active_tab == 'gys'">
+          <div class="text">用户名密码登录</div>
+          <div class="gys_box">
             <input class="login_input" ref="userName" autofocus v-model="user_name" placeholder="请输入用户名称" maxlength="20" @keyup.enter="login">
             <input class="login_input" type="password" v-model="password" placeholder="请输入登录密码" maxlength="20" @keyup.enter="login">
             <div class="login" @click="login">登录</div>
-          </div>
-          <div v-if="active_tab == 'sm'">
-            <div id="container"></div>
           </div>
         </div>
       </div>
@@ -166,120 +153,66 @@
 	export default{
 		data() {
 			return {
-        active_tab:"gys",     //登录类型
         user_name:"",         //用户名
         password:"",          //密码
       };
     },
-    watch:{
-      active_tab:function(n,o){
-        if(n == 'sm'){
-          this.getAppKey();
-        }else{
-          this.$nextTick(() => {
-            this.$refs.userName.focus();
-          })
-        }
-      }
-    },
     methods: {
-      getAppKey() {
-        resource.getAppKey().then((res) => {
-         if (res.data.code == "1") {
-          let appKey = res.data.data.appkey;
-          this.ddLoginInit(appKey);
+     //点击登录
+     login(){
+      if(this.user_name == ''){
+        this.$message.warning('请输入用户名');
+        return;
+      }else if(this.password == ''){
+        this.$message.warning('请输入密码');
+        return;
+      }
+      let arg = {
+        username:this.user_name,
+        password:this.password
+      }
+      resource.merchantLogin(arg).then(res => {
+        if (res.data.code == "1") {
+          sessionStorage.setItem("cache",true);
+          let data = res.data.data;
+          sessionStorage.setItem("user_type", data.user_type);
+          sessionStorage.setItem("ding_user_id", data.ding_user_id);
+          sessionStorage.setItem("ding_user_name", data.ding_user_name);
+          sessionStorage.setItem("secret_key", data.secret_key);
+          sessionStorage.setItem("login_token", data.login_token);
+          let user_info = {
+            user_type:data.user_type,
+            ding_user_id:data.ding_user_id,
+            ding_user_name:data.ding_user_name,
+            login_token:data.login_token,
+            secret_key:data.secret_key,
+          }
+          this.$store.commit('setToken',user_info);
+          let domain = data.img_domain;
+          this.$store.commit('setDomain',domain);
+          sessionStorage.setItem("domain",domain);
+           //获取导航
+          this.getMenuNotice();
         } else {
           this.$message.warning(res.data.msg);
         }
-      });
-      },
-      ddLoginInit(appKey) {
-        let url = `${location.origin}/api/scancodes/ewmlogin`;
-        const goto = encodeURIComponent(
-         `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}`
-         );
-        window.DDLogin({
-         id: "container",
-         goto: goto,
-         style: "border:none;background-color:#FFFFFF;margin:0 auto;",
-        		width: "100%", //官方参数 365
-        		height: "300", //官方参数 400
-          });
-        let handleMessage = (event) => {
-         let origin = event.origin;
-         if (origin == "https://login.dingtalk.com") {
-          const loginTmpCode = event.data;
-          window.location.href = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}&loginTmpCode=${loginTmpCode}`;
+      })
+    },
+    //获取导航
+    getMenuNotice(){
+      resource.getMenuNotice().then(res => {
+        if(res.data.code == 1){
+          let data = res.data.data;
+          let menu_list = data.menu_list;
+          this.$store.commit("setMenuList", menu_list);
+          sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
+          this.$router.replace('/tab_menu')
+        }else{
+          this.$message.warning(res.data.msg);
         }
-      };
-      if (typeof window.addEventListener != "undefined") {
-       window.addEventListener("message", handleMessage, false);
-     } else if (typeof window.attachEvent != "undefined") {
-       window.attachEvent("onmessage", handleMessage);
-     }
-   },
-     //点击登录
-   login(){
-    if(this.user_name == ''){
-      this.$message.warning('请输入用户名');
-      return;
-    }else if(this.password == ''){
-      this.$message.warning('请输入密码');
-      return;
-    }
-    let arg = {
-      username:this.user_name,
-      password:this.password
-    }
-    resource.supplierLogin(arg).then(res => {
-      if (res.data.code == "1") {
-        sessionStorage.setItem("cache",true);
-        let data = res.data.data;
-        sessionStorage.setItem("user_type", data.user_type);
-        sessionStorage.setItem("ding_user_id", data.ding_user_id);
-        sessionStorage.setItem("ding_user_name", data.ding_user_name);
-        sessionStorage.setItem("secret_key", data.secret_key);
-        sessionStorage.setItem("login_token", data.login_token);
-        sessionStorage.setItem("supplier_name", data.supplier_name);
-        let user_info = {
-          user_type:data.user_type,
-          ding_user_id:data.ding_user_id,
-          ding_user_name:data.ding_user_name,
-          login_token:data.login_token,
-          secret_key:data.secret_key,
-          supplier_name:data.supplier_name,
-        }
-        this.$store.commit('setToken',user_info);
-        let domain = data.img_domain;
-        this.$store.commit('setDomain',domain);
-        sessionStorage.setItem("domain",domain);
+      })
+    },
 
-        let menu_list = [{
-          menu_name:'首页',
-          web_url:"gys_index"
-        },{
-          menu_name:'我的款式',
-          web_url:"gys_supplier"
-        },{
-          menu_name:'款式资料',
-          web_url:"style_info"
-        },{
-          menu_name:'爆款主推款',
-          web_url:"b_z_page"
-        }]
-
-        this.$store.commit("setMenuList", menu_list);
-        sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
-
-        this.$router.replace('tab_menu');
-      } else {
-        this.$message.warning(res.data.msg);
-      }
-    })
-
-
-
-  }
-},
+  },
 }
 </script>

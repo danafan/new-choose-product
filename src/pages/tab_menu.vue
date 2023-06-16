@@ -243,7 +243,6 @@
     },
     created() {
       this.getNotice();
-      // this.username = sessionStorage.getItem("ding_user_name");
       let path = window.location.hash.split('#/')[1].indexOf('?') > -1?window.location.hash.split('#/')[1].split('?')[0]:window.location.hash.split('#/')[1];
       if(path == 'tab_menu'){
         this.active_index = 0;

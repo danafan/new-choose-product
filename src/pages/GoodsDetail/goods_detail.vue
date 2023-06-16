@@ -8,13 +8,10 @@
 					<MainImage :image_list="banner_list" v-if="over_loading"/>
 					<!-- 商品信息 -->
 					<GoodsInfo :goods_info="goods_info"/>
-					<!-- 店铺信息 -->
-					<StoreInfo :goods_info="goods_info"/>
 				</div>
 				<div class="bottom_content">
 					<div class="content_top_tab">
 						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
-						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">选中记录</div>
 					</div>
 					<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
 					<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>

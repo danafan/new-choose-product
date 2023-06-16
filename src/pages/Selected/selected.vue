@@ -1,7 +1,7 @@
 <template>
 	<div class="padding_page">
 		<div class="padding_page_content">
-			<SearchWidget page_path="selected_history" @callback="searchFn" placeholder="款号 款式编码"/>
+			<SearchWidget page_path="selected_history" @callback="searchFn" placeholder="搜索款号"/>
 			<el-card class="card_box" id="card_box">
 				<div class="tab_row" id="tab_row">
 					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in tab_list" @click="active_index = index">
@@ -37,9 +37,6 @@
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
 					</el-form-item>
-					<el-form-item class="form_item">
-						<el-checkbox :true-label="1" :false-label="0" v-model="only_self" @change="checkPage(1)">只看自己</el-checkbox>
-					</el-form-item>
 				</el-form>
 			</div>
 			<TableTitle id="table_title">
@@ -57,28 +54,6 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" width="140">
-					<template slot-scope="scope">
-						<div class="item_row" v-if="scope.row.new_supplier_ksbm">
-							<div class="item_label">供应商：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
-							</div>
-						</div>
-						<div class="item_row" v-if="scope.row.new_i_id">
-							<div class="item_label">普通：</div>
-							<div class="flex-1">
-								<div v-for="item in scope.row.new_i_id">{{item}}</div>
-							</div>
-						</div>
-						<div class="item_row" v-if="scope.row.new_bd_i_id">
-							<div class="item_label">BD：</div>
-							<div class="flex-1">
-								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
-							</div>
-						</div>
-					</template>
-				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="售卖价" prop="selling_price"></el-table-column>
 				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
@@ -127,7 +102,7 @@
 				<div class="lable">款号</div>
 				<div class="value">{{goods_info.style_name}}</div>
 			</div>
-			<div class="detail_row">
+			<!-- <div class="detail_row">
 				<div class="lable">款式编码</div>
 				<div class="value">
 					<div>供应商：{{goods_info.supplier_ksbm}}</div>
@@ -162,7 +137,7 @@
 			<div class="detail_row">
 				<div class="lable">结算方式</div>
 				<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
-			</div>
+			</div> -->
 			<div class="detail_row">
 				<div class="lable">类目</div>
 				<div class="value">{{goods_info.category_name}}</div>

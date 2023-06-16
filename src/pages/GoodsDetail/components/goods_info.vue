@@ -7,18 +7,6 @@
 				<div class="row_price">¥{{goods_info.cost_price}}</div>
 			</div>
 			<div class="content_row">
-				<div class="row_lable">供应商款式编码</div>
-				<div class="row_value">{{goods_info.supplier_ksbm}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">款式编码</div>
-				<div class="row_value">{{goods_info.i_id}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">BD款式编码</div>
-				<div class="row_value">{{goods_info.bd_i_id}}</div>
-			</div>
-			<div class="content_row">
 				<div class="row_lable">款号</div>
 				<div class="row_value">{{goods_info.style_name}}</div>
 			</div>
