@@ -54,6 +54,28 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="款号" prop="style_name"></el-table-column>
+				<el-table-column label="款式编码" width="140">
+					<template slot-scope="scope">
+						<div class="item_row" v-if="scope.row.new_supplier_ksbm">
+							<div class="item_label">供应商：</div>
+							<div class="item_value">
+								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
+							</div>
+						</div>
+						<!-- <div class="item_row" v-if="scope.row.new_i_id">
+							<div class="item_label">普通：</div>
+							<div class="flex-1">
+								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+							</div>
+						</div>
+						<div class="item_row" v-if="scope.row.new_bd_i_id">
+							<div class="item_label">BD：</div>
+							<div class="flex-1">
+								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							</div>
+						</div> -->
+					</template>
+				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="售卖价" prop="selling_price"></el-table-column>
 				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>

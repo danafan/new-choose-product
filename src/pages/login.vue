@@ -1,19 +1,15 @@
 <template>
-	<div class="login_container">
-		<img class="login_page_back" src="../static/login_page_back.png">
-		<div class="login_content">
-			<div class="content_left">
-				<img class="login_big_back" src="../static/login_big_back.png">
-				<img class="login_small_back" src="../static/login_small_back.png">
-			</div>
-			<div class="content_right">
-				<div class="content">
-          <div class="text">用户名密码登录</div>
-          <div class="gys_box">
-            <input class="login_input" ref="userName" autofocus v-model="user_name" placeholder="请输入用户名称" maxlength="20" @keyup.enter="login">
-            <input class="login_input" type="password" v-model="password" placeholder="请输入登录密码" maxlength="20" @keyup.enter="login">
-            <div class="login" @click="login">登录</div>
-          </div>
+  <div class="login_container">
+    <img class="login_page_back" src="../static/login_page_back.png">
+    <div class="login_content">
+      <div class="content_left">
+        <img class="login_big_back" src="../static/login_big_back.png">
+        <img class="login_small_back" src="../static/login_small_back.png">
+      </div>
+      <div class="content_right">
+        <div class="content">
+          <div class="text">钉钉扫码一键登录</div>
+          <div id="container"></div>
         </div>
       </div>
     </div>
@@ -149,70 +145,51 @@
 }
 </style>
 <script>
-	import resource from '../api/resource.js'
-	export default{
-		data() {
-			return {
-        user_name:"",         //用户名
-        password:"",          //密码
-      };
+  import resource from '../api/resource.js'
+  export default{
+    created(){
+      this.getAppKey();
     },
     methods: {
-     //点击登录
-     login(){
-      if(this.user_name == ''){
-        this.$message.warning('请输入用户名');
-        return;
-      }else if(this.password == ''){
-        this.$message.warning('请输入密码');
-        return;
-      }
-      let arg = {
-        username:this.user_name,
-        password:this.password
-      }
-      resource.merchantLogin(arg).then(res => {
-        if (res.data.code == "1") {
-          sessionStorage.setItem("cache",true);
-          let data = res.data.data;
-          sessionStorage.setItem("user_type", data.user_type);
-          sessionStorage.setItem("ding_user_id", data.ding_user_id);
-          sessionStorage.setItem("ding_user_name", data.ding_user_name);
-          sessionStorage.setItem("secret_key", data.secret_key);
-          sessionStorage.setItem("login_token", data.login_token);
-          let user_info = {
-            user_type:data.user_type,
-            ding_user_id:data.ding_user_id,
-            ding_user_name:data.ding_user_name,
-            login_token:data.login_token,
-            secret_key:data.secret_key,
-          }
-          this.$store.commit('setToken',user_info);
-          let domain = data.img_domain;
-          this.$store.commit('setDomain',domain);
-          sessionStorage.setItem("domain",domain);
-           //获取导航
-          this.getMenuNotice();
+      getAppKey() {
+        resource.getAppKey().then((res) => {
+         if (res.data.code == "1") {
+          let appKey = res.data.data.appkey;
+          this.ddLoginInit(appKey);
         } else {
           this.$message.warning(res.data.msg);
         }
-      })
-    },
-    //获取导航
-    getMenuNotice(){
-      resource.getMenuNotice().then(res => {
-        if(res.data.code == 1){
-          let data = res.data.data;
-          let menu_list = data.menu_list;
-          this.$store.commit("setMenuList", menu_list);
-          sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
-          this.$router.replace('/tab_menu')
-        }else{
-          this.$message.warning(res.data.msg);
+      });
+      },
+      ddLoginInit(appKey) {
+        let url = `${location.origin}/api/scancodes/ewmlogin`;
+        const goto = encodeURIComponent(
+         `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}`
+         );
+        window.DDLogin({
+         id: "container",
+         goto: goto,
+         style: "border:none;background-color:#FFFFFF;margin:0 auto;",
+            width: "100%", //官方参数 365
+            height: "300", //官方参数 400
+          });
+        let handleMessage = (event) => {
+         let origin = event.origin;
+         if (origin == "https://login.dingtalk.com") {
+          const loginTmpCode = event.data;
+          window.location.href = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}&loginTmpCode=${loginTmpCode}`;
         }
-      })
-    },
+      };
+      if (typeof window.addEventListener != "undefined") {
+       window.addEventListener("message", handleMessage, false);
+     } else if (typeof window.attachEvent != "undefined") {
+       window.attachEvent("onmessage", handleMessage);
+     }
+   }
 
-  },
+ }
+
+
+ 
 }
 </script>

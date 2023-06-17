@@ -2,9 +2,9 @@
   <div class="container" @click="closeFn">
     <div class="page_header">
       <!-- logo -->
-      <img class="logo_icon" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0">
+      <img class="logo_icon" src="../static/logo_icon.png">
       <!-- 公告 -->
-      <el-popover placement="bottom-end" width="420" trigger="hover" v-else>
+      <!-- <el-popover placement="bottom-end" width="420" trigger="hover" v-else>
         <el-table :data="notice_list" max-height="180px" size="mini" :show-header="false" @row-click="noticeDetail">
           <el-table-column width="248" property="notice_content" label="内容">
             <template slot-scope="scope">
@@ -24,7 +24,7 @@
           </div>
           <div class="message_content">{{notice_list[0].notice_title}}</div>
         </div>
-      </el-popover>
+      </el-popover> -->
       <div class="header_right">
         <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
         <div v-if="user_type == 2">
