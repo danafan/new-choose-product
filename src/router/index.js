@@ -8,7 +8,6 @@ const notice_page = (resolve) => require(["@/pages/NoticePage/notice_page"], res
 const goods_detail = (resolve) => require(["@/pages/GoodsDetail/goods_detail"], resolve);
 const selected = (resolve) => require(["@/pages/Selected/selected"], resolve);
 const car_page = (resolve) => require(["@/pages/CarPage/car_page"], resolve);
-
 const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
 const chain_style_info = (resolve) => require(["@/pages/SupplyChain/pages/chain_style_info"], resolve);
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
@@ -16,7 +15,6 @@ const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/cha
 const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
 const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
 const account_list = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/account_list"], resolve);
-const edit_record = (resolve) => require(["@/pages/SupplyChain/pages/SettingPages/edit_record"], resolve);
 const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
 const setting_record_page = (resolve) => require(["@/pages/SupplyChain/pages/setting_record_page"], resolve);
