@@ -10,15 +10,10 @@
 					<GoodsInfo :goods_info="goods_info"/>
 				</div>
 				<div class="bottom_content">
-					<div class="content_top_tab">
-						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
-					</div>
-					<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
-					<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>
+					<TabDetail :goods_info="goods_info" v-if="over_loading"/>
 				</div>
 			</div>
 			<CarWidget :is_fixed="true"/>
-			<!-- <FeekbackWidget :style_id="style_id" :is_fixed="true"/> -->
 		</div>
 	</div>
 </template>
@@ -30,9 +25,7 @@
 	import GoodsInfo from './components/goods_info.vue'
 	import StoreInfo from './components/store_info.vue'
 	import TabDetail from './components/tab_detail.vue'
-	import TabRecord from './components/tab_record.vue'
 	import CarWidget from '../../components/car_widget.vue'
-	// import FeekbackWidget from '../../components/feekback_widget.vue'
 	export default{
 		data(){
 			return{
@@ -92,9 +85,7 @@
 			GoodsInfo,
 			StoreInfo,
 			TabDetail,
-			TabRecord,
-			CarWidget,
-			// FeekbackWidget
+			CarWidget
 		}
 	}
 </script>
@@ -119,28 +110,6 @@
 		.bottom_content{
 			margin-top: 20rem;
 			border:1px solid #E5E5E5;
-			.content_top_tab{
-				background: #F6F6F6;
-				width: 100%;
-				height: 44rem;
-				display: flex;
-				.content_top_tab_item{
-					border-left:1px solid #E5E5E5;
-					border-right:1px solid #E5E5E5;
-					height: 44rem;
-					line-height: 44rem;
-					padding-left: 60rem;
-					padding-right: 60rem;
-					font-size: 12rem;
-					color: #333333;
-					cursor:pointer;
-				}
-				.active_content_top_tab_item{
-					border:1px solid var(--color);
-					background: #ffffff;
-					color: var(--color);
-				}
-			}
 		}
 	}
 }

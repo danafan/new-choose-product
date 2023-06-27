@@ -88,18 +88,128 @@
         resource.getMenuNotice().then(res => {
           if(res.data.code == 1){
             let data = res.data.data;
-            let menu_list = data.menu_list;
+            let menu_list = [
+            {
+              "menu_id": 1,
+              "menu_name": "选品中心",
+              "web_url": "index",
+              "icon": "s-order",
+              "show_type": 1,
+              "list": []
+            },
+            {
+              "menu_id": 4,
+              "menu_name": "供应链中心",
+              "web_url": "supply_chain",
+              "icon": "s-order",
+              "show_type": 1,
+              "list": [
+              {
+                "menu_id": 7,
+                "menu_name": "供应商",
+                "web_url": "chain_supplier_page",
+                "icon": "s-order",
+                "show_type": 1,
+                "list": []
+              },
+              {
+                "menu_id": 12,
+                "menu_name": "款式资料",
+                "web_url": "chain_style_info",
+                "icon": "s-order",
+                "show_type": 1,
+                "list": [
+                {
+                  "menu_id": 18,
+                  "menu_name": "款式资料",
+                  "web_url": "style_info",
+                  "icon": "s-order",
+                  "show_type": 1,
+                  "list": []
+                },
+                {
+                  "menu_id": 19,
+                  "menu_name": "款式资料审核",
+                  "web_url": "info_audit",
+                  "icon": "s-order",
+                  "show_type": 1,
+                  "list": []
+                }
+                ]
+              },
+              {
+                "menu_id": 5,
+                "menu_name": "公告管理",
+                "web_url": "chain_message_page",
+                "icon": "s-order",
+                "show_type": 1,
+                "list": []
+              },
+              {
+                "menu_id": 10,
+                "menu_name": "反馈",
+                "web_url": "chain_feekback_page",
+                "icon": "s-order",
+                "show_type": 1,
+                "list": []
+              },
+              {
+                "menu_id": 9,
+                "menu_name": "权限",
+                "web_url": "chain_permissions_page",
+                "icon": "s-order",
+                "show_type": 1,
+                "list": [
+                {
+                  "menu_id": 13,
+                  "menu_name": "权限配置",
+                  "web_url": "user_table",
+                  "icon": "s-order",
+                  "show_type": 1,
+                  "list": []
+                },
+                {
+                  "menu_id": 14,
+                  "menu_name": "访问权限",
+                  "web_url": "role_table",
+                  "icon": "s-order",
+                  "show_type": 1,
+                  "list": []
+                },
+                {
+                  "menu_id": 15,
+                  "menu_name": "权限录入",
+                  "web_url": "entry_table",
+                  "icon": "s-order",
+                  "show_type": 1,
+                  "list": []
+                }
+                ]
+              },
+              {
+                "menu_id": 25,
+                "menu_name": "操作日志",
+                "web_url": "setting_record_page",
+                "icon": "",
+                "show_type": 1,
+                "list": []
+              }
+              ]
+}
+]
 
-            this.$store.commit("setMenuList", menu_list);
-            sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
-            if(window.location.hash.split('#/')[1] == ''){
-              this.$router.replace('/tab_menu')
-            }
-          }else{
-            this.$message.warning(res.data.msg);
-          }
-        })
-      },
-    },
-  };
+// let menu_list = data.menu_list;
+
+this.$store.commit("setMenuList", menu_list);
+sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
+if(window.location.hash.split('#/')[1] == ''){
+  this.$router.replace('/tab_menu')
+}
+}else{
+  this.$message.warning(res.data.msg);
+}
+})
+},
+},
+};
 </script>
