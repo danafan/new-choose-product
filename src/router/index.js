@@ -9,6 +9,22 @@ const goods_detail = (resolve) => require(["@/pages/GoodsDetail/goods_detail"], 
 const selected = (resolve) => require(["@/pages/Selected/selected"], resolve);
 const car_page = (resolve) => require(["@/pages/CarPage/car_page"], resolve);
 
+const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
+const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
+const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
+const chain_audit_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_audit_page"], resolve);
+const b_z_promotion_page = (resolve) => require(["@/pages/SupplyChain/pages/b_z_promotion_page"], resolve);
+const edit_goods = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/edit_goods"], resolve);
+const image_setting = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/image_setting"], resolve);
+const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
+const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
+const account_list = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/account_list"], resolve);
+const chain_setting_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_setting_page"], resolve);
+const edit_record = (resolve) => require(["@/pages/SupplyChain/pages/SettingPages/edit_record"], resolve);
+const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
+const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
+const setting_record_page = (resolve) => require(["@/pages/SupplyChain/pages/setting_record_page"], resolve);
+
 Vue.use(Router);
 
 const router = new Router({
@@ -47,6 +63,105 @@ const router = new Router({
       path: "/car_page",
       name: "待选记录",
       component: car_page
+    },
+    {
+      path: "/supply_chain",
+      name: "供应链中心",
+      component: supply_chain,
+      children: [
+      {
+        path: "/chain_message_page",
+        name: "公告",
+        component: chain_message_page
+      },
+      {
+        path: "/chain_goods_page",
+        name: "款式资料",
+        meta:{
+         keep_alive:true,
+         use_cache:false
+       },
+       component: chain_goods_page,
+     },
+     {
+      path: "/chain_audit_page",
+      name: "商品审核",
+      component: chain_audit_page
+    },
+    {
+      path: "/b_z_promotion_page",
+      name: "爆/主推款审",
+      component: b_z_promotion_page
+    },
+    {
+      path: "/edit_goods",
+      name: "上传/编辑商品",
+      meta:{
+        is_back:true
+      },
+      component: edit_goods
+    },
+    {
+      path: "/image_setting",
+      name: "图片管理",
+      meta:{
+        is_back:true
+      },
+      component: image_setting
+    },
+    {
+      path: "/add_edit_supplier",
+      name: "添加/编辑供应商",
+      meta:{
+        is_back:true
+      },
+      component: add_edit_supplier
+    },
+    {
+      path: "/chain_supplier_detail",
+      name: "供应商详情",
+      meta:{
+        is_back:true
+      },
+      component: chain_supplier_detail
+    },
+    {
+      path: "/account_list",
+      name: "账号管理",
+      meta:{
+        is_back:true
+      },
+      component: account_list
+    },
+    {
+      path: "/chain_setting_page",
+      name: "配置",
+      component: chain_setting_page
+    },
+    {
+      path: "/edit_record",
+      name: "修改记录",
+      meta:{
+        is_back:true
+      },
+      component: edit_record
+    },
+    {
+      path: "/chain_permissions_page",
+      name: "权限",
+      component: chain_permissions_page
+    },
+    {
+      path: "/chain_feekback_page",
+      name: "反馈",
+      component: chain_feekback_page
+    },
+    {
+      path: "/setting_record_page",
+      name: "操作日志",
+      component: setting_record_page
+    },
+    ]
     },
     ],
   },

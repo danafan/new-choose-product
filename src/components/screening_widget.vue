@@ -4,7 +4,7 @@
 		<div class="selected_box" @click.stop="checkFn">
 			<div class="selected_left">
 				<div>已选条件</div>
-				<div class="tj_row" v-if="category_index == 0 && class_index == 0 && style_index == 0 && season_index == 0">
+				<div class="tj_row" v-if="category_index == 0 && class_index == 0 && style_index == 0">
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div>全部</div>
 				</div>
@@ -18,9 +18,6 @@
 					<div v-if="style_list.length > 0">拍摄风格（{{style_list[style_index].shooting_style_name}}）</div>
 
 					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
-					<div v-if="season_list.length > 0 && page_type == 'index'">季节（{{season_list[season_index].season_name}}）</div>
-
-					<img class="right_arrow" src="../static/down_arrow.png">
 					<div class="reset_button" @click.stop="resetFn">重置选择</div>
 				</div>
 			</div>
@@ -48,12 +45,6 @@
 					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click.stop="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row" v-if="page_type == 'index'">
-				<div class="lable">季节：</div>
-				<div class="list">
-					<div class="item" :class="{'active_item':season_index == index}" v-for="(item,index) in season_list" @click.stop="checkIndex('season',index)">{{item.season_name}}</div>
-				</div>
-			</div>
 		</el-card>
 		<div class="cate_box">
 			<div class="sort_row">
@@ -64,9 +55,6 @@
 					<img class="sort_icon" src="../static/sort_desc.png" v-if="item.sort == 'desc'">
 				</div>
 			</div>
-			<div class="style_row" v-if="page_type != 'gys_supplier'">
-				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
-			</div>
 			<div class="price_row" v-if="page_type != 'gys_supplier'">
 				<div>价格：</div>
 				<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
@@ -74,16 +62,15 @@
 				&nbsp
 				<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
 			</div>
+			<div class="date_row">
+				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
+				</el-date-picker>
+			</div>
 			<el-checkbox-group v-model="up_type" @change="upTypeChange">
 				<el-checkbox :label="1">今日上新</el-checkbox>
 				<el-checkbox :label="3">三日上新</el-checkbox>
 				<el-checkbox :label="7">七日上新</el-checkbox>
 			</el-checkbox-group>
-			<div class="date_row">
-				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
-				</el-date-picker>
-			</div>
-			
 		</div>
 	</div>
 </template>
@@ -102,17 +89,10 @@
 				class_list:[],			//分类列表
 				style_index:0,			//选中的拍摄风格下标
 				style_list:[],			//拍摄风格列表
-				season_index:0,			//选中的季节下标
-				season_list:[],			//季节列表
 				sort_list:[{
-					name:'30天销量',
+					name:'销量',
 					key:'sales',
 					val:'sales_num_all',
-					sort:'default'
-				},{
-					name:'选中量',
-					key:'select',
-					val:'select_num',
 					sort:'default'
 				},{
 					name:'浏览量',
@@ -120,25 +100,6 @@
 					val:'views_num',
 					sort:'default'
 				}],								//排序列表
-				cate_style_list:[{
-					name:'深度库存',
-					is_selected:0
-				},{
-					name:'视频款',
-					is_selected:0
-				},{
-					name:'爆款',
-					is_selected:0
-				},{
-					name:'主推款',
-					is_selected:0
-				},{
-					name:'独家款',
-					is_selected:0
-				},{
-					name:'自主款',
-					is_selected:0
-				}],								//款式列表
 				up_type:[],					//上新类型
 				date:[],						//上新日期 
 				start_price:"",
@@ -159,14 +120,7 @@
 			}
 		},
 		created(){
-			let o = {
-				name:'7天销量',
-				key:'sales_seven',
-				val:'sales_seven',
-				sort:'default'
-			}
-			this.sort_list.unshift(o);
-				//获取筛选条件列表
+			//获取筛选条件列表
 			this.getScreenList();
 		},
 		computed: {
@@ -230,13 +184,6 @@
 							shooting_style_id:''
 						})
 						this.style_list = style_list;
-						//季节
-						let season_list = data.season;
-						season_list.unshift({
-							season_name:'全部',
-							season_id:''
-						})
-						this.season_list = season_list;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -246,7 +193,6 @@
 				this.category_index = 0;
 				this.class_index = 0;
 				this.style_index = 0;
-				this.season_index = 0;
 				//获取当前条件并传递
 				this.callbackFn();
 			},
@@ -266,9 +212,6 @@
 				case 'style':
 					this.style_index = index;
 					break;
-				case 'season':
-					this.season_index = index;
-					break;
 				}
 				//获取当前条件并传递
 				this.callbackFn();
@@ -287,16 +230,6 @@
 						}
 					}else{
 						item.sort = 'default';
-					}
-				})
-				//获取当前条件并传递
-				this.callbackFn();
-			},
-			//点击切换款式
-			checkStyle(index){
-				this.cate_style_list.map((item,i) => {
-					if(index == i){
-						item.is_selected = item.is_selected == 1?0:1;
 					}
 				})
 				//获取当前条件并传递
@@ -360,10 +293,6 @@
 				//处理风格
 				if(this.style_index > 0){
 					arg.shooting_style_id = this.style_list[this.style_index].shooting_style_id;
-				}
-				//处理季节
-				if(this.page_type == 'index' && this.season_index > 0){
-					arg.season_id = this.season_list[this.season_index].season_id;
 				}
 				this.$emit('callback',arg);
 			}

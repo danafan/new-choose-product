@@ -18,7 +18,7 @@
 				</div>
 			</div>
 			<CarWidget :is_fixed="true"/>
-			<FeekbackWidget :style_id="style_id" :is_fixed="true"/>
+			<!-- <FeekbackWidget :style_id="style_id" :is_fixed="true"/> -->
 		</div>
 	</div>
 </template>
@@ -32,7 +32,7 @@
 	import TabDetail from './components/tab_detail.vue'
 	import TabRecord from './components/tab_record.vue'
 	import CarWidget from '../../components/car_widget.vue'
-	import FeekbackWidget from '../../components/feekback_widget.vue'
+	// import FeekbackWidget from '../../components/feekback_widget.vue'
 	export default{
 		data(){
 			return{
@@ -94,7 +94,7 @@
 			TabDetail,
 			TabRecord,
 			CarWidget,
-			FeekbackWidget
+			// FeekbackWidget
 		}
 	}
 </script>

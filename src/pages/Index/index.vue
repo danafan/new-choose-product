@@ -16,6 +16,7 @@
 				</el-card>
 			</div>
 			<CarWidget :is_fixed="true"/>
+			<FeekbackWidget :is_fixed="true"/>
 		</div>
 	</div>
 </template>
@@ -25,6 +26,7 @@
 	import GoodsItem from '../../components/goods_item.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	import CarWidget from '../../components/car_widget.vue'
+	import FeekbackWidget from '../../components/feekback_widget.vue'
 	import EmptyPage from '../../components/empty_page.vue'
 
 	import resource from '../../api/resource.js'
@@ -111,6 +113,7 @@
 			GoodsItem,
 			PaginationWidget,
 			CarWidget,
+			FeekbackWidget,
 			EmptyPage
 		}
 	}
