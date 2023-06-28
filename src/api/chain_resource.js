@@ -39,7 +39,7 @@ let path = {
   feedBackHandle:'api/feedback/handle',					//确认处理
   feedBackEditGoods:'api/feedback/edit_goods',			//编辑商品
   addAllProductStyle:'api/productstyle/addallproductstyle', //批量添加商品
-  getGoodsList:'api/productstyle/getallproductstyle',	//获取商品列表
+  getGoodsList:'api/productstyle/goods',	//获取商品列表
   exportProductStyle:'api/productstyle/derivegetallproductstyle', //款式资料导出
   getOnepro:'api/productstyle/getonepro',           //商品信息查看
   addGoods:'api/productstyle/addproductstyle',			//添加商品
