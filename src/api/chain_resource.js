@@ -1,7 +1,7 @@
 import http from "./request.js";
 let path = {
-  getCateList: "api/setting/cate_list",     //类目列表接口
-  addCate:'api/setting/add_cate',			//创建类目
+  getCateList: "api/setting/cate_list",         //类目列表接口
+  addCate:'api/setting/add_cate',			          //创建类目
   editCate:'api/setting/edit_cate',			//编辑类目
   deleteCate:'api/setting/del_cate',		//删除类目
   getClassList:'api/setting/class_list',	//分类列表
@@ -39,7 +39,7 @@ let path = {
   feedBackHandle:'api/feedback/handle',					//确认处理
   feedBackEditGoods:'api/feedback/edit_goods',			//编辑商品
   addAllProductStyle:'api/productstyle/addallproductstyle', //批量添加商品
-  getGoodsList:'api/productstyle/goods',	//获取商品列表
+  
   exportProductStyle:'api/productstyle/derivegetallproductstyle', //款式资料导出
   getOnepro:'api/productstyle/getonepro',           //商品信息查看
   addGoods:'api/productstyle/addproductstyle',			//添加商品
@@ -88,6 +88,10 @@ let path = {
   editGoodsIid:'api/productstyle/editgoodsiid',           //批量编辑款式编码
   hotDataList:'api/productstyle/hotdatalist',             //爆款主推款审核列表
   hotDataInfo:'api/productstyle/showhotdatainfo',             //获取爆款详情/审核
+
+  getGoodsList:'api/productstyle/goods',                  //获取商品列表
+  addProductStyle:'api/productstyle/addproductstyle',     //添加款式资料
+  editProductStyle:'api/productstyle/editproductstyle',   //款式资料详情/编辑
 };  
 export default {
   //类目列表接口
@@ -265,10 +269,6 @@ export default {
   //批量上传商品
   addAllProductStyle(params) {
     return http.post(path.addAllProductStyle, params);
-  },
-  //获取商品列表
-  getGoodsList(params) {
-    return http.get(path.getGoodsList, params);
   },
   //款式资料导出
   exportProductStyle(params) {
@@ -481,5 +481,22 @@ export default {
   //爆款主推款审核
   hotDataInfoPost(params) {
     return http.post(path.hotDataInfo, params);
+  },
+
+  //获取商品列表
+  getGoodsList(params) {
+    return http.get(path.getGoodsList, params);
+  },
+  //添加款式资料
+  addProductStyle(params) {
+    return http.post(path.addProductStyle, params);
+  },
+  //款式资料详情
+  editProductStyleGet(params) {
+    return http.get(path.editProductStyle, params);
+  },
+  //编辑款式资料
+  editProductStylePost(params) {
+    return http.post(path.editProductStyle, params);
   },
 };

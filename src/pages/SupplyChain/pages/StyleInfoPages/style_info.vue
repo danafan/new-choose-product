@@ -57,7 +57,7 @@
 				<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
 				<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
 				<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
-				<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
+				<!-- <el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.add == 1">导入</el-button> -->
 				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
 				<el-button size="mini" type="primary" @click="openForm('1')">添加</el-button>
 			</TableTitle>
@@ -68,10 +68,10 @@
 				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="图片" width="150" >
 					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.images.length > 0 && loading == false">
-							<el-carousel-item v-for="item in scope.row.images" :key="item">
-								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+						<div v-if="scope.row.img.length == 0">暂无</div>
+						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.img.length > 0 && loading == false">
+							<el-carousel-item v-for="(item,index) in scope.row.img" :key="index">
+								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.img"></el-image>
 							</el-carousel-item>
 						</el-carousel>
 					</template>
@@ -83,26 +83,26 @@
 						<div v-else></div>
 					</template>
 				</el-table-column>
-				<el-table-column label="供货价" prop="cost_price" width="150">
+				<el-table-column label="供货价">
 					<template slot-scope="scope">
-						<div>{{scope.row.price_status == '1'?'原成本价：':''}}{{scope.row.cost_price}}</div>
-						<div v-if="scope.row.price_status == '1'">调后成本价：{{scope.row.edit_price}}</div>
+						<div>¥{{scope.row.supply_price}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="分销价" prop="cost_price" width="150">
+				<el-table-column label="分销价">
 					<template slot-scope="scope">
-						<div>{{scope.row.price_status == '1'?'原成本价：':''}}{{scope.row.cost_price}}</div>
-						<div v-if="scope.row.price_status == '1'">调后成本价：{{scope.row.edit_price}}</div>
+						<div>¥{{scope.row.distribution_price}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="控价" prop="price_control"></el-table-column>
-				<el-table-column label="颜色" prop="color"></el-table-column>
-				<el-table-column label="尺码" prop="size"></el-table-column>
-				<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>
+				<el-table-column label="控价">
+					<template slot-scope="scope">
+						<div>¥{{scope.row.price_control}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="面料" prop="fabric"></el-table-column>
 				<el-table-column label="类目" prop="category"></el-table-column>
 				<el-table-column label="上新时间" width="160" prop="new_time_name"></el-table-column>
 				<el-table-column label="备注" prop="remark"></el-table-column>
-				<el-table-column label="审核状态" prop="common_text">
+				<el-table-column label="审核状态">
 					<template slot-scope="scope">
 						<div v-if="scope.row.check_status == 1">上架待审核</div>
 						<div v-if="scope.row.check_status == 2">已上架</div>
@@ -112,57 +112,12 @@
 						<div v-if="scope.row.check_status == 6">拒绝下架</div>
 					</template>
 				</el-table-column>
-				<!-- <el-table-column label="款式编码" width="140">
-					<template slot-scope="scope">
-						<div class="item_row" v-if="scope.row.new_supplier_ksbm">
-							<div class="item_label">供应商：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
-							</div>
-						</div>
-						<div class="item_row" v-if="scope.row.new_i_id">
-							<div class="item_label">普通：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_i_id">{{item}}</div>
-							</div>
-						</div>
-						<div class="item_row" v-if="scope.row.new_bd_i_id">
-							<div class="item_label">BD：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
-							</div>
-						</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="市场" prop="market"></el-table-column>
-				<el-table-column label="是否对接推单" width="100">
-					<template slot-scope="scope">
-						<div>{{scope.row.abutment_type == 1?'是':'否'}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="提供拍照" prop="common_text">
-					<template slot-scope="scope">
-						<div>{{scope.row.photograph == 1?'是':'否'}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="拍摄风格" prop="shooting_style"></el-table-column>
-				<el-table-column label="分类" prop="classification"></el-table-column>
-				<el-table-column label="合作模式" prop="mode"></el-table-column> -->
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="openForm('2')">编辑</el-button>
-						<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
-						<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.style_id,scope.row.style_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
-							<el-button type="text" size="small">
-								更多<i class="el-icon-arrow-down el-icon--right"></i>
-							</el-button>
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
-								<el-dropdown-item command="2" v-if="scope.row.check_status == 2 || scope.row.check_status == 6">图片管理</el-dropdown-item>
-								<el-dropdown-item command="3" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.del == 1">删除</el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
+						<el-button style="margin-right: 10px" type="text" size="small"  v-if="button_list.info == 1" @click="getGoodsInfo('3',scope.row.style_id)">查看</el-button>
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="openForm('2',scope.row.style_id)">编辑</el-button>
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.del == 1" @click="deleteGoods(scope.row.style_id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -188,90 +143,104 @@
 				<el-button size="small" @click="import_dialog = false">取消</el-button>
 			</div>
 		</el-dialog>
-		<!-- 添加或编辑 -->
+		<!-- 添加/编辑/详情 -->
 		<el-dialog :visible.sync="ae_dialog" :show-close="false" top="30px" width="65%">
 			<div slot="title" class="dialog_title">
-				<div>{{dialog_type == '1'?'添加':' 编辑'}}</div>
+				<div>{{dialog_type == '1'?'添加':dialog_type == '2'?'编辑':'详情'}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="ae_dialog = false">
 			</div>
 			<div class="ae_box">
 				<!-- 上面表单 -->
 				<div class="flex jsb">
 					<el-form size="mini" style="width: 50%;">
-						<el-form-item label="商品款号：" required>
-							<el-input placeholder="款号" style="width: 172px;" v-model="ae_arg.style_name">
+						<el-form-item label="商品款号：" :required="dialog_type != '3'">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.style_name}}</div>
+							<el-input placeholder="款号" style="width: 172px;" v-model="ae_arg.style_name" v-else>
 							</el-input>
 						</el-form-item>
 						<el-form-item label="标题：">
-							<el-input placeholder="标题" style="width: 172px;" v-model="ae_arg.title">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.title}}</div>
+							<el-input placeholder="标题" style="width: 172px;" v-model="ae_arg.title" v-else>
 							</el-input>
 						</el-form-item>
 						<el-form-item label="类目：">
-							<el-select v-model="ae_arg.category_id" clearable filterable placeholder="全部">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.category_id | categoryFilter(cate_list)}}</div>
+							<el-select v-model="ae_arg.category_id" clearable filterable placeholder="全部" v-else>
 								<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
 								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="分类：">
-							<el-select v-model="ae_arg.classification_id" clearable filterable placeholder="全部">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.classification_id | classFilter(class_list)}}</div>
+							<el-select v-model="ae_arg.classification_id" clearable filterable placeholder="全部" v-else>
 								<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
 								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="面料：">
-							<el-input placeholder="面料" style="width: 172px;" v-model="ae_arg.fabric">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.fabric}}</div>
+							<el-input placeholder="面料" style="width: 172px;" v-model="ae_arg.fabric" v-else>
 							</el-input>
 						</el-form-item>
-						<el-form-item label="供应商：" required>
-							<el-select v-model="ae_arg.supplier_id" clearable filterable placeholder="全部">
+						<el-form-item label="供应商：" :required="dialog_type != '3'">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.supplier_id | supplierFilter(supplier_list)}}</div>
+							<el-select v-model="ae_arg.supplier_id" clearable filterable placeholder="全部" v-else>
 								<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
 								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="备注：">
-							<el-input type="textarea" style="width: 172px;" :autosize="{ minRows: 1, maxRows: 4}" placeholder="备注" v-model="ae_arg.remark">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.remark}}</div>
+							<el-input type="textarea" style="width: 172px;" :autosize="{ minRows: 1, maxRows: 4}" placeholder="备注" v-model="ae_arg.remark" v-else>
 							</el-input>
 						</el-form-item>
 					</el-form>
 					<el-form size="mini" style="width: 50%;">
 						<el-form-item label="建议零售价：">
-							<el-input placeholder="建议零售价" type="number" style="width: 172px;" v-model="ae_arg.msrp">
+							<div class="info_value" v-if="dialog_type == '3'">¥{{ae_arg.msrp}}</div>
+							<el-input placeholder="建议零售价" type="number" style="width: 172px;" v-model="ae_arg.msrp" v-else>
 							</el-input>
 						</el-form-item>
-						<el-form-item label="控价：" required>
-							<el-input placeholder="控价" type="number" style="width: 172px;" v-model="ae_arg.price_control">
+						<el-form-item label="控价：" :required="dialog_type != '3'">
+							<div class="info_value" v-if="dialog_type == '3'">¥{{ae_arg.price_control}}</div>
+							<el-input placeholder="控价" type="number" style="width: 172px;" v-model="ae_arg.price_control" v-else>
 							</el-input>
 							<el-tooltip class="item" effect="dark" content="默认结算价的1.8倍" placement="right">
 								<i class="el-icon-question" style="margin-left: 5px;"></i>
 							</el-tooltip>
 						</el-form-item>
 						<el-form-item label="吊牌价：">
-							<el-input placeholder="吊牌价" type="number" style="width: 172px;" v-model="ae_arg.tag_price">
+							<div class="info_value" v-if="dialog_type == '3'">¥{{ae_arg.tag_price}}</div>
+							<el-input placeholder="吊牌价" type="number" style="width: 172px;" v-model="ae_arg.tag_price" v-else>
 							</el-input>
 						</el-form-item>
-						<el-form-item label="结算价：" required>
-							<el-input placeholder="结算价" type="number" style="width: 172px;" v-model="ae_arg.settlement_price">
+						<el-form-item label="结算价：" :required="dialog_type != '3'">
+							<div class="info_value" v-if="dialog_type == '3'">¥{{ae_arg.settlement_price}}</div>
+							<el-input placeholder="结算价" type="number" style="width: 172px;" v-model="ae_arg.settlement_price" v-else>
 							</el-input>
 							<el-tooltip class="item" effect="dark" content="供应商实际结算的价格" placement="right">
 								<i class="el-icon-question" style="margin-left: 5px;"></i>
 							</el-tooltip>
 						</el-form-item>
 						<el-form-item label="供货价：">
-							<el-input placeholder="供货价" type="number" style="width: 172px;" v-model="ae_arg.supply_price">
+							<div class="info_value" v-if="dialog_type == '3'">¥{{ae_arg.supply_price}}</div>
+							<el-input placeholder="供货价" type="number" style="width: 172px;" v-model="ae_arg.supply_price" v-else>
 							</el-input>
 							<el-tooltip class="item" effect="dark" content="批价 供应商的采购价默认聚水潭接口取的采购价" placement="right">
 								<i class="el-icon-question" style="margin-left: 5px;"></i>
 							</el-tooltip>
 						</el-form-item>
 						<el-form-item label="分销价：">
-							<el-input placeholder="分销价" type="number" style="width: 172px;" v-model="ae_arg.distribution_price">
+							<div class="info_value" v-if="dialog_type == '3'">¥{{ae_arg.distribution_price}}</div>
+							<el-input placeholder="分销价" type="number" style="width: 172px;" v-model="ae_arg.distribution_price" v-else>
 							</el-input>
 							<el-tooltip class="item" effect="dark" content="该款跟合作商家结算的价格" placement="right">
 								<i class="el-icon-question" style="margin-left: 5px;"></i>
 							</el-tooltip>
 						</el-form-item>
 						<el-form-item label="网盘地址：">
-							<el-input placeholder="网盘地址" style="width: 172px;" v-model="ae_arg.net_disk_address">
+							<div class="info_value" v-if="dialog_type == '3'">{{ae_arg.net_disk_address}}</div>
+							<el-input placeholder="网盘地址" style="width: 172px;" v-model="ae_arg.net_disk_address" v-else>
 							</el-input>
 						</el-form-item>
 					</el-form>
@@ -286,20 +255,20 @@
 					</div>
 					<el-form size="mini">
 						<el-form-item label="尺码：">
-							<el-tag size="medium" :key="tag" v-for="tag in size_list" closable @close="sizeClose(tag)">
+							<el-tag size="medium" :key="tag" v-for="tag in size_list" :closable="dialog_type != '3'" @close="sizeClose(tag)">
 								{{tag}}
 							</el-tag>
 							<el-input class="input-new-tag" v-if="size_visible" v-model="size_value" ref="sizeTagInput" size="mini" @keyup.enter.native="sizeInputConfirm" @blur="sizeInputConfirm">
 							</el-input>
-							<el-button v-else class="button-new-tag" size="mini" @click="addSize">+添加</el-button>
+							<el-button v-if="!size_visible && dialog_type != '3'" class="button-new-tag" size="mini" @click="addSize">+添加</el-button>
 						</el-form-item>
 						<el-form-item label="颜色：">
-							<el-tag size="medium" :key="tag" v-for="tag in color_list" closable @close="colorClose(tag)">
+							<el-tag size="medium" :key="tag" v-for="tag in color_list" :closable="dialog_type != '3'" @close="colorClose(tag)">
 								{{tag}}
 							</el-tag>
 							<el-input class="input-new-tag" v-if="color_visible" v-model="color_value" ref="colorTagInput" size="mini" @keyup.enter.native="colorInputConfirm" @blur="colorInputConfirm">
 							</el-input>
-							<el-button v-else class="button-new-tag" size="mini" @click="addColor">+添加</el-button>
+							<el-button  v-if="!color_visible && dialog_type != '3'" class="button-new-tag" size="mini" @click="addColor">+添加</el-button>
 						</el-form-item>
 					</el-form>
 					<el-table size="mini" :data="size_color_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="240">
@@ -307,11 +276,12 @@
 						<el-table-column label="尺码" prop="size" width="120"></el-table-column>
 						<el-table-column label="SKU编码">
 							<template slot-scope="scope">
-								<el-input size="small" placeholder="SKU款式编码不能重复" v-model="scope.row.sku_code">
+								<div v-if="dialog_type == '3'">{{scope.row.sku_code}}</div>
+								<el-input size="small" placeholder="SKU款式编码不能重复" v-model="scope.row.sku_code" v-else>
 								</el-input>
 							</template>
 						</el-table-column>
-						<el-table-column label="操作" width="120">
+						<el-table-column label="操作" width="120" v-if="dialog_type != '3'">
 							<template slot-scope="scope">
 								<el-button type="text" size="mini" @click="deleteRow(scope.$index)">删除</el-button>
 							</template>
@@ -323,7 +293,7 @@
 					<div slot="header" class="clearfix">
 						<span>商品图</span>
 					</div>
-					<UploadFile :is_multiple="true" :max_num="6" :current_num="goods_img_list.length" :img_list="goods_img_list" @callbackFn="goodsImgCallBackFn"/>
+					<UploadFile :only_view="dialog_type == '3'" :is_multiple="true" :max_num="6" :current_num="goods_img_list.length" :img_list="goods_img_list" @callbackFn="goodsImgCallBackFn"/>
 				</el-card>
 				<!-- 风格图 -->
 				<el-card class="goods_style_card">
@@ -333,7 +303,7 @@
 					<div>
 						<div class="flex border_bottom">
 							<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
-								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" @click.stop="deleteStyleTab(index)">
+								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="dialog_type != '3'" @click.stop="deleteStyleTab(index)">
 								<div>{{item.shooting_style_name}}</div>
 							</div>
 							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
@@ -349,13 +319,13 @@
 										<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
 									</div>
 								</div>
-								<div class="style_item flex ac pointer" slot="reference">
+								<div class="style_item flex ac pointer" slot="reference" v-if="dialog_type != '3'">
 									<img class="add_style_icon" src="../../../../static/add_style_icon.png" @click="import_dialog = false">
 									<div>新增</div>
 								</div>
 							</el-popover>
 						</div>
-						<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" @callbackFn="currentStyleImgCallBackFn"/>
+						<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" :only_view="dialog_type == '3'" @callbackFn="currentStyleImgCallBackFn"/>
 						</div>
 					</el-card>
 					<!-- 详情图 -->
@@ -372,12 +342,12 @@
 								
 							</div>
 						</div>
-						<UploadFile :is_multiple="true" :max_num="6" :current_num="detail_img_list.length" :img_list="detail_img_list" @callbackFn="detailImgCallBackFn"/>
+						<UploadFile :only_view="dialog_type == '3'" :is_multiple="true" :max_num="6" :current_num="detail_img_list.length" :img_list="detail_img_list" @callbackFn="detailImgCallBackFn"/>
 					</el-card>
 				</div>
 				<div slot="footer" class="dialog_footer">
-					<el-button size="small" @click="ae_dialog = false">取消</el-button>
-					<el-button size="small" type="primary" @click="saveAeFn">保存</el-button>
+					<el-button size="small" @click="ae_dialog = false">{{dialog_type == '3'?'关闭':'取消'}}</el-button>
+					<el-button size="small" type="primary" @click="saveAeFn" v-if="dialog_type != '3'">{{dialog_type == '1'?'上架':'保存'}}</el-button>
 				</div>
 			</el-dialog>
 		</div>
@@ -505,35 +475,30 @@
 		.view_box{
 			height: 360rem;
 			overflow-y: scroll;
-	// 		flex:1 1 auto;
-      // height: 0;
-      // overflow-y: auto;
 		}
-	// .border_all{
-	// 	border-top:1px solid #DDDDDD;
-	// 	border-right:1px solid #DDDDDD;
-	// }
-	// .border_left{
-	// 	border-left:1px solid #DDDDDD;
-	// }
-</style>
-<script>
-	import commonResource from '../../../../api/common_resource.js'
-	import resource from '../../../../api/chain_resource.js'
-	import { getNowDate,getCurrentDate } from "../../../../api/date.js";
+		.info_value{
+			display: initial;
+			font-size: 13rem;
+			color: #333333;
+		}
+	</style>
+	<script>
+		import commonResource from '../../../../api/common_resource.js'
+		import resource from '../../../../api/chain_resource.js'
+		import { getNowDate,getCurrentDate } from "../../../../api/date.js";
 
-	import { exportPost } from "../../../../api/export.js";
+		import { exportPost } from "../../../../api/export.js";
 
-	import { MessageBox, Message } from "element-ui";
+		import { MessageBox, Message } from "element-ui";
 
-	import TableTitle from '../../components/table_title.vue'
-	import PaginationWidget from '../../../../components/pagination_widget.vue'
-	import UploadFile from '../../../../components/upload_file.vue'
-	export default{
-		data(){
-			return{
-				is_up:false,
-				loading:false,
+		import TableTitle from '../../components/table_title.vue'
+		import PaginationWidget from '../../../../components/pagination_widget.vue'
+		import UploadFile from '../../../../components/upload_file.vue'
+		export default{
+			data(){
+				return{
+					is_up:false,
+					loading:false,
 				supplier_list:[],		//供应商列表
 				supplier_ids:[],		//选中的供应商
 				cate_list:[],			//类目列表
@@ -580,8 +545,7 @@
 				total:0,
 				button_list:{},
 				import_dialog:false,	//导入或批量修改弹窗
-				import_type:"1",		//导入弹窗类型
-				multiple_selection:[],
+				multiple_selection:[],	//主表已选中的列表
 				fullscreenLoading:false,
 				style_id:"",				//点击的款式ID
 				dialog_type:'',				//1:添加；2:编辑
@@ -638,7 +602,7 @@
 			this.search = "";
 			this.page = 1;
 			//获取列表
-			// this.getGoodsList();
+			this.getGoodsList();
 		},
 		mounted() {
     		//获取表格最大高度
@@ -728,9 +692,30 @@
 				})
 			},
 			//点击添加或编辑
-			openForm(type){
+			openForm(type,style_id){
 				this.dialog_type = type;
-				this.ae_dialog = true;
+				this.style_id = style_id;
+				if(this.dialog_type == '1'){	//添加
+					this.ae_dialog = true;
+					return;
+				}
+				resource.editProductStyleGet({style_id:this.style_id}).then(res => {
+					let data = res.data.data;
+					for(let k in this.ae_arg){
+						this.ae_arg[k] = data[k];
+					}
+					this.size_color_data = data.sku.list;		//商品规格
+					this.getSizeColorList();
+					this.goods_img_list = data.img;				//商品图
+					let style_imgs = data.style_imgs;			//风格图
+					style_imgs.map(item => {
+						item['image_arr'] = item.img;
+						delete item.img;
+					})
+					this.style_card_list = style_imgs;
+					this.detail_img_list = data.detail_imgs;	//详情图
+					this.ae_dialog = true;
+				})
 			},
 			//删除已添加的尺寸
 			sizeClose(tag) {
@@ -873,11 +858,7 @@
 					this.$message.warning('请输入控价！');
 				}else if(this.ae_arg.settlement_price == ''){
 					this.$message.warning('请输入结算价！');
-				}
-				// else if(this.size_color_data.length == 0){
-				// 	this.$message.warning('商品规格不能为空！');
-				// }
-				else{
+				}else{
 					//处理商品规格
 					let sku_null_arr = this.size_color_data.filter(item => {
 						return item.sku_code == '';
@@ -902,50 +883,23 @@
 					arg['img'] = this.goods_img_list.join(',');
 					arg['style_imgs'] = style_card_arg.join(';');
 					arg['detail_imgs'] = this.detail_img_list.join(',');
-					console.log(arg)
-					
-				}
-			},
-			//点击批量编辑或导入
-			importFn(type){
-				this.import_type = type;
-				this.import_dialog = true;
-			},
-			//下载模版
-			downTemplate(){
-				if(this.import_type == '1'){
-					window.open(`${this.downLoadUrl}/file/批量更新款式编码模板.xlsx`);
-				}else{
-					window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
-				}
-			},
-			//导入
-			uploadCsv(){
-				if (this.$refs.csvUpload.files.length > 0) {
-					let files = this.$refs.csvUpload.files;
-					this.fullscreenLoading = true;
-					if(this.import_type == '1'){	//批量修改
-						resource.editGoodsIid({file:files[0]}).then(res => {
-							this.$refs.csvUpload.value = null;
-							this.import_dialog = false;
-							this.fullscreenLoading = false;
+					if(this.dialog_type == '1'){	//添加
+						resource.addProductStyle(arg).then(res => {
 							if(res.data.code == 1){
 								this.$message.success(res.data.msg);
-								this.page = 1;
-								//获取列表
+								this.ae_dialog = false;
+							//获取列表
 								this.getGoodsList();
 							}else{
 								this.$message.warning(res.data.msg);
 							}
 						})
-					}else{	//导入
-						resource.addAllProductStyle({file:files[0]}).then(res => {
-							this.$refs.csvUpload.value = null;
-							this.import_dialog = false;
-							this.fullscreenLoading = false;
+					}else{							//编辑
+						arg['style_id'] = this.style_id;
+						resource.editProductStylePost(arg).then(res => {
 							if(res.data.code == 1){
 								this.$message.success(res.data.msg);
-								this.page = 1;
+								this.ae_dialog = false;
 								//获取列表
 								this.getGoodsList();
 							}else{
@@ -953,6 +907,32 @@
 							}
 						})
 					}
+					
+					
+				}
+			},
+			//下载模版
+			downTemplate(){
+				window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
+			},
+			//导入
+			uploadCsv(){
+				if (this.$refs.csvUpload.files.length > 0) {
+					let files = this.$refs.csvUpload.files;
+					this.fullscreenLoading = true;
+					resource.addAllProductStyle({file:files[0]}).then(res => {
+						this.$refs.csvUpload.value = null;
+						this.import_dialog = false;
+						this.fullscreenLoading = false;
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.page = 1;
+							//获取列表
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
 					
 				}
 			},
@@ -1036,26 +1016,10 @@
 				resource.getGoodsList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						this.button_list = res.data.data.button_list;
-						this.total = res.data.data.total;
-						let data = res.data.data.data;
-						data.map(item => {
-							let images = [];
-							item.img.map(i => {
-								images.push(this.domain + i);
-							})
-							item.images = images;
-							if(item.i_id){
-								item.new_i_id = item.i_id.split(',')
-							}
-							if(item.bd_i_id){
-								item.new_bd_i_id = item.bd_i_id.split(',')
-							}
-							if(item.supplier_ksbm){
-								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
-							}
-						})
-						this.data = data;
+						let data = res.data.data;
+						this.button_list = data.button_list;
+						this.total = data.total;
+						this.data = data.data;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -1154,37 +1118,26 @@
 					});          
 				});
 			},
-			//监听更多操作按钮
-			handleCommand(e,id,name){
-				if(e == '1'){	//查看
-					this.$router.push('/edit_goods?page_type=goods&goods_type=3&style_id=' + id);
-				}else if(e == '2'){	//图片管理
-					this.$router.push('/image_setting?style_id=' + id + '&style_name=' + name)
-				}else if(e == '3'){	//删除
-					this.$confirm(`确认删除?`, '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
-					}).then(() => {
-						let arg = {
-							style_id:id
-						}
-						resource.delGoods(arg).then(res => {
-							if(res.data.code == 1){
-								this.$message.success(res.data.msg);
-								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '已取消'
-						});          
-					});
-				}
+			//点击查看
+			getGoodsInfo(type,style_id){
+				this.dialog_type = type;
+				resource.editProductStyleGet({style_id:style_id}).then(res => {
+					let data = res.data.data;
+					for(let k in this.ae_arg){
+						this.ae_arg[k] = data[k];
+					}
+					this.size_color_data = data.sku.list;		//商品规格
+					this.getSizeColorList();
+					this.goods_img_list = data.img;				//商品图
+					let style_imgs = data.style_imgs;			//风格图
+					style_imgs.map(item => {
+						item['image_arr'] = item.img;
+						delete item.img;
+					})
+					this.style_card_list = style_imgs;
+					this.detail_img_list = data.detail_imgs;	//详情图
+					this.ae_dialog = true;
+				})
 			},
 			//切换上架或下架
 			checkStatus(style_id,type){
@@ -1213,12 +1166,61 @@
 					});          
 				});
 			},
+			//单个删除款式资料
+			deleteGoods(style_id){
+				this.$confirm(`确认删除?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						style_id:style_id
+					}
+					resource.delGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+								//获取列表
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
 			windowOpen(url,old_url){
 				if(!old_url || old_url.indexOf('https://pan.baidu.com') == -1){
 					this.$message.warning('该地址不是网盘地址格式!')
 				}else{
 					window.open(url)
 				}
+			},
+		},
+		filters:{
+			//类目过滤
+			categoryFilter:(v,cate_list) => {
+				let arr = cate_list.filter(item => {
+					return item.category_id == v;
+				})
+				return arr.length > 0?arr[0].category_name:'';
+			},
+			//分类过滤
+			classFilter:(v,class_list) => {
+				let arr = class_list.filter(item => {
+					return item.classification_id == v;
+				})
+				return arr.length > 0?arr[0].classification_name:'';
+			},
+			//供应商过滤
+			supplierFilter:(v,supplier_list) => {
+				let arr = supplier_list.filter(item => {
+					return item.supplier_id == v;
+				})
+				return arr.length > 0?arr[0].supplier_name:'';
 			},
 		},
 		components:{
