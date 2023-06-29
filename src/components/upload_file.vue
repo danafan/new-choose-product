@@ -137,7 +137,14 @@
 			}
 		},
 		created(){
-			this.preview_images = this.img_list;
+			// this.preview_images = this.img_list;
+			this.img_list.map(item => {
+				let dd = {
+					urls:item,
+					show_icon:false
+				}
+				this.preview_images.push(dd)
+			})
 		},
 		methods:{
 			//处理上传图片组件不参与拖动

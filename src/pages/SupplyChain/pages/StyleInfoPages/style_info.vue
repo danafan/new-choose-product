@@ -279,7 +279,10 @@
 				<!-- 商品规格 -->
 				<el-card class="goods_style_card">
 					<div slot="header" class="clearfix">
-						<span>商品规格</span>
+						<div class="flex">
+							<!-- <div style="color:#F56C6C;margin-right:5px">*</div> -->
+							<div>商品规格</div>
+						</div>
 					</div>
 					<el-form size="mini">
 						<el-form-item label="尺码：">
@@ -329,11 +332,11 @@
 					</div>
 					<div>
 						<div class="flex border_bottom">
-							<div class="relative style_item flex" :class="[{'active_item':active_style_index == index}]" v-for="(item,index) in style_card_list">
-								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" @click="import_dialog = false">
+							<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
+								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" @click.stop="deleteStyleTab(index)">
 								<div>{{item.shooting_style_name}}</div>
 							</div>
-							<el-popover placement="right-start" width="400" trigger="click">
+							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
 								<div>
 									<div style="margin-bottom: 10px;">选择风格</div>
 									<el-table size="mini" :data="style_table_data" :max-height="240" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" @selection-change="styleChange">
@@ -351,144 +354,161 @@
 									<div>新增</div>
 								</div>
 							</el-popover>
-							
 						</div>
-					</div>
-				</el-card>
-				<!-- 详情图 -->
-				<el-card class="goods_style_card">
-					<div slot="header" class="clearfix">
-						<span>详情图</span>
-					</div>
-					<UploadFile :is_multiple="true" :max_num="6" :current_num="detail_img_list.length" :img_list="detail_img_list" @callbackFn="detailImgCallBackFn"/>
-				</el-card>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="ae_dialog = false">取消</el-button>
-				<el-button size="small" type="primary" @click="saveAeFn">保存</el-button>
-			</div>
-		</el-dialog>
-	</div>
-</template>
-<style type="text/css">
-	.goods_style_card .el-card__header{
-		padding:10px 20px!important;
-	}
-	.goods_style_card .el-tag + .el-tag {
-		margin-left: 10px;
-	}
-	.goods_style_card .button-new-tag {
-		margin-left: 10px;
-	}
-	.goods_style_card .input-new-tag {
-		width: 90px;
-		margin-left: 10px;
-		vertical-align: bottom;
-	}
-</style>
-<style lang="less" scoped>
-	.form_card{
-		margin-bottom: 16rem;
-		.up_down_row{
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			.search_title{
-				font-size: 14px;
-				font-weight: bold;
-			}
-			.selected_right{
-				display: flex;
-				align-items: center;
-				cursor: pointer;
-				.down_arrow{
-					margin-left: 5rem;
-					transform: rotate(-90deg);
-					width: 14rem;
-					height: 8rem;
-				}
-				.rotate{
-					transform: rotate(0deg);
-				}
-			}
-			
+						<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" @callbackFn="currentStyleImgCallBackFn"/>
+						</div>
+					</el-card>
+					<!-- 详情图 -->
+					<el-card class="goods_style_card">
+						<div slot="header" class="clearfix">
+							<div class="flex jsb">
+								<div>详情图</div>
+								<el-popover placement="left-start" trigger="click">
+									<div class="view_box flex fc">
+										<el-image :src="item" fit="contain" v-for="item in detail_img_list"></el-image>
+									</div>
+									<el-button slot="reference" type="text" :disabled="detail_img_list.length == 0" size="mini">预览</el-button>
+								</el-popover>
+								
+							</div>
+						</div>
+						<UploadFile :is_multiple="true" :max_num="6" :current_num="detail_img_list.length" :img_list="detail_img_list" @callbackFn="detailImgCallBackFn"/>
+					</el-card>
+				</div>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="ae_dialog = false">取消</el-button>
+					<el-button size="small" type="primary" @click="saveAeFn">保存</el-button>
+				</div>
+			</el-dialog>
+		</div>
+	</template>
+	<style type="text/css">
+		.goods_style_card .el-card__header{
+			padding:10px 20px!important;
 		}
-		.between{
-			justify-content:space-between;
-		}
-		.form_item{
-			margin-bottom:0 !important;
-		}
-	}
-	.card_box{
-		flex:1;
-		.image{
-			height: 100px;
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 56px;
-				text-align:end;
-			}
-			.item_value{
-				flex: 1;
-			}
-		}
-	}
-	.down_box{
-		display:flex;
-		padding:30rem;
-		.upload_box{
+		.goods_style_card .el-tag + .el-tag {
 			margin-left: 10px;
-			position: relative;
-			.upload_file{
+		}
+		.goods_style_card .button-new-tag {
+			margin-left: 10px;
+		}
+		.goods_style_card .input-new-tag {
+			width: 90px;
+			margin-left: 10px;
+			vertical-align: bottom;
+		}
+	</style>
+	<style lang="less" scoped>
+		.form_card{
+			margin-bottom: 16rem;
+			.up_down_row{
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				.search_title{
+					font-size: 14px;
+					font-weight: bold;
+				}
+				.selected_right{
+					display: flex;
+					align-items: center;
+					cursor: pointer;
+					.down_arrow{
+						margin-left: 5rem;
+						transform: rotate(-90deg);
+						width: 14rem;
+						height: 8rem;
+					}
+					.rotate{
+						transform: rotate(0deg);
+					}
+				}
+
+			}
+			.between{
+				justify-content:space-between;
+			}
+			.form_item{
+				margin-bottom:0 !important;
+			}
+		}
+		.card_box{
+			flex:1;
+			.image{
+				height: 100px;
+			}
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 56px;
+					text-align:end;
+				}
+				.item_value{
+					flex: 1;
+				}
+			}
+		}
+		.down_box{
+			display:flex;
+			padding:30rem;
+			.upload_box{
+				margin-left: 10px;
+				position: relative;
+				.upload_file{
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
+				}
+			}
+		}
+		.ae_box{
+			max-height: 960rem;
+			padding:30rem;
+			overflow-y: scroll;
+		}
+		.goods_style_card{
+			margin-bottom: 15rem;
+		}
+		.style_item{
+			border: 1px solid #DDDDDD;
+			padding: 10rem 20rem;
+			font-size: 14rem;
+			color: #333333;
+			position:relative;
+			.delete_style_icon{
 				position: absolute;
 				top: 0;
-				bottom: 0;
-				left: 0;
 				right: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0;
+				width: 14rem;
+				height: 14rem;
+			}
+			.add_style_icon{
+				margin-right: 6rem;
+				width: 14rem;
+				height: 14rem;
 			}
 		}
-	}
-	.ae_box{
-		max-height: 960rem;
-		padding:30rem;
-		overflow-y: scroll;
-	}
-	.goods_style_card{
-		margin-bottom: 15rem;
-	}
-	.style_item{
-		border: 1px solid #DDDDDD;
-		padding: 10rem 20rem;
-		font-size: 14rem;
-		color: #333333;
-		position:relative;
-		.delete_style_icon{
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 14rem;
-			height: 14rem;
+		.active_item{
+			border: 1px solid #FFC998;
+			background: #FFFCFA;
+			color: #E47A1A;
 		}
-		.add_style_icon{
-			margin-right: 6rem;
-			width: 14rem;
-			height: 14rem;
+		.border_bottom{
+			border-bottom:1px solid #DDDDDD;
+			margin-bottom: 20px;
 		}
-	}
-	.active_item{
-		border: 1px solid #FFC998;
-		background: #FFFCFA;
-		color: #E47A1A;
-	}
-	.border_bottom{
-		border-bottom:1px solid #DDDDDD;
-	}
+		.view_box{
+			height: 360rem;
+			overflow-y: scroll;
+	// 		flex:1 1 auto;
+      // height: 0;
+      // overflow-y: auto;
+		}
 	// .border_all{
 	// 	border-top:1px solid #DDDDDD;
 	// 	border-right:1px solid #DDDDDD;
@@ -591,10 +611,11 @@
 				size_color_data:[],				//尺码和颜色生成的表格数据
 				goods_img_list:[],				//商品图列表
 				detail_img_list:[],				//详情图列表
-				style_card_list:[],								//风格列表
+				style_card_list:[],				//风格列表
 				selected_style:[],				//表格已选中的列表
 				style_table_data:[],			//未选择的风格列表
 				active_style_index:0,			//风格列表选中的下标
+				show_style_upload:true,			//是否显示风格图图片组件
 			}
 		},
 		created(){
@@ -617,7 +638,7 @@
 			this.search = "";
 			this.page = 1;
 			//获取列表
-			this.getGoodsList();
+			// this.getGoodsList();
 		},
 		mounted() {
     		//获取表格最大高度
@@ -808,6 +829,39 @@
 					item['image_arr'] = [];
 					this.style_card_list.push(item);
 				})
+				this.style_table_data = this.filterStyle(this.style_table_data,this.style_card_list);
+				this.$refs.stylePopover.doClose();
+			},
+			//点击删除已选的风格
+			deleteStyleTab(index){
+				this.show_style_upload = false;
+				if(this.active_style_index == index){
+					this.active_style_index = 0;
+				}
+				let current_style = this.style_card_list[index];
+				this.style_table_data.unshift(current_style);
+				this.style_card_list.splice(index,1);
+				this.$nextTick(()=>{
+					this.show_style_upload = true;
+				})
+			},
+			//点击切换已选的风格
+			checkStyleTab(index){
+				this.show_style_upload = false;
+				this.active_style_index = index;
+				this.$nextTick(()=>{
+					this.show_style_upload = true;
+				})
+			},
+			//监听风格图列表回调
+			currentStyleImgCallBackFn(img_arr){
+				let new_item = JSON.parse(JSON.stringify(this.style_card_list[this.active_style_index]));
+				new_item.image_arr = img_arr;
+				this.$set(this.style_card_list,this.active_style_index,new_item);
+			},
+			//对比已选中的过滤右侧未选中的风格  
+			filterStyle(arr1, arr2) {
+				return arr1.filter((v) => arr2.every((val) => val.shooting_style_id!= v.shooting_style_id));
 			},
 			//点击添加或编辑的保存
 			saveAeFn(){
@@ -819,9 +873,11 @@
 					this.$message.warning('请输入控价！');
 				}else if(this.ae_arg.settlement_price == ''){
 					this.$message.warning('请输入结算价！');
-				}else if(this.size_color_data.length == 0){
-					this.$message.warning('商品规格不能为空！');
-				}else{
+				}
+				// else if(this.size_color_data.length == 0){
+				// 	this.$message.warning('商品规格不能为空！');
+				// }
+				else{
 					//处理商品规格
 					let sku_null_arr = this.size_color_data.filter(item => {
 						return item.sku_code == '';
@@ -835,7 +891,18 @@
 					this.size_color_data.map(item => {
 						sku_list_arr.push(`color-${item.color}_size-${item.size}_skucode-${item.sku_code}`)
 					})
-					console.log(sku_list_arr)
+					//处理风格图
+					let style_card_arg = [];
+					this.style_card_list.map(item => {
+						style_card_arg.push(`${item.shooting_style_id}-${item.image_arr.join(',')}`);
+					})
+					//可传参数
+					let arg = JSON.parse(JSON.stringify(this.ae_arg));
+					arg['sku_list'] = sku_list_arr.join(',');
+					arg['img'] = this.goods_img_list.join(',');
+					arg['style_imgs'] = style_card_arg.join(';');
+					arg['detail_imgs'] = this.detail_img_list.join(',');
+					console.log(arg)
 					
 				}
 			},
