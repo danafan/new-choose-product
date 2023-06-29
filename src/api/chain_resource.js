@@ -92,6 +92,7 @@ let path = {
   getGoodsList:'api/productstyle/goods',                  //获取商品列表
   addProductStyle:'api/productstyle/addproductstyle',     //添加款式资料
   editProductStyle:'api/productstyle/editproductstyle',   //款式资料详情/编辑
+  auditGoodsList:'api/productstyle/audit_goods',          //待审核款式资料列表
 };  
 export default {
   //类目列表接口
@@ -498,5 +499,9 @@ export default {
   //编辑款式资料
   editProductStylePost(params) {
     return http.post(path.editProductStyle, params);
+  },
+  //待审核款式资料列表
+  auditGoodsList(params) {
+    return http.get(path.auditGoodsList, params);
   },
 };
