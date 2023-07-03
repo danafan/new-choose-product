@@ -18,7 +18,7 @@
 	</div>
 </template>
 <script>
-	import resource from '../../api/resource.js'
+	import resource from '../../api/chain_resource.js'
 
 	import PageTitle from '../../components/page_title.vue'
 	import MainImage from './components/main_image.vue'
@@ -54,7 +54,7 @@
 				let arg = {
 					style_id:this.style_id
 				}
-				resource.getGoodsInfo(arg).then(res => {
+				resource.homeGoodsInfo(arg).then(res => {
 					if(res.data.code == 1){
 						this.goods_info = res.data.data;
 						//处理banner图片

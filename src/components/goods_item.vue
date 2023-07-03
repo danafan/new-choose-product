@@ -36,7 +36,7 @@
 		<div class="line mt-6 mb-6"></div>
 		<div class="flex ac jsb">
 			<div class="new_time_name">
-				款号：123jsadkjhas
+				款号：{{info.sstyle_name}}
 			</div>
 			<div class="button_row">
 				<div class="add" @click.stop="addCar(info.cost_price)" v-if="info.in_cart == 0">
@@ -49,7 +49,7 @@
 		<div class="line mt-6 mb-6"></div>
 		<div class="flex ac">
 			<div class="mr-10">浏览量：{{info.views_num}}</div>
-			<div>销量：{{info.select_num}}</div>
+			<div>销量：{{info.sales_num_all}}</div>
 		</div>
 	</div>
 	<!-- 更多图片 -->
@@ -122,8 +122,15 @@
 				-webkit-box-orient: vertical;
 			}
 			.new_time_name{
+				width: 70%;
 				font-size:12rem;
 				color: #999999;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
 			}
 			.line{
 				background:#F0F0F0;

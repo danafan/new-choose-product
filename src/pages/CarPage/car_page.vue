@@ -11,10 +11,10 @@
 					<el-table-column label="图片" width="150">
 						<template slot-scope="scope">
 							<div class="sx" v-if="scope.row.status == 1">失效</div>
-							<div v-else-if="scope.row.images.length == 0">暂无</div>
+							<div v-else-if="scope.row.img.length == 0">暂无</div>
 							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
-								<el-carousel-item v-for="item in scope.row.images" :key="item">
-									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+								<el-carousel-item v-for="item in scope.row.img" :key="item">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.img"></el-image>
 								</el-carousel-item>
 							</el-carousel>
 						</template>
@@ -27,23 +27,13 @@
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
 					<el-table-column label="拍摄风格" prop="shooting_style_name"></el-table-column>
-					<el-table-column label="供货价" prop="cost_price">
+					<el-table-column label="供货价" prop="supply_price">
 						<template slot-scope="scope">
-							<div>¥{{scope.row.cost_price}}</div>
+							<div>¥{{scope.row.supply_price}}</div>
 						</template>
 					</el-table-column>
 					<el-table-column label="上新时间" prop="new_time_name" width="150">
 					</el-table-column>
-					<!-- <el-table-column label="款式编码" width="140">
-						<template slot-scope="scope">
-							<div class="item_row" v-if="scope.row.new_supplier_ksbm">
-								<div class="item_label">供应商：</div>
-								<div class="flex-1">
-									<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
-								</div>
-							</div>
-						</template>
-					</el-table-column> -->
 					<el-table-column label="操作" width="80" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="text" size="small" @click="deleteFn('1',scope.row.select_cart_id)">移除</el-button>
@@ -153,27 +143,7 @@
 				resource.getCarList().then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						let car_goods = res.data.data.data;
-						console.log(car_goods)
-						car_goods.map(item => {
-							let images = [];
-							if(item.img){
-								item.img.map(i => {
-									images.push(this.domain + i);
-								})
-							}
-							item.images = images;
-							if(item.i_id){
-								item.new_i_id = item.i_id.split(',')
-							}
-							if(item.bd_i_id){
-								item.new_bd_i_id = item.bd_i_id.split(',')
-							}
-							if(item.supplier_ksbm){
-								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
-							}
-						})
-						this.car_goods = car_goods;
+						this.car_goods = res.data.data.data;
 					}else{
 						this.$message,warning(res.data.msg);
 					}

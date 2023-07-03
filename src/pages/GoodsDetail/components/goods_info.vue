@@ -4,15 +4,15 @@
 		<div class="info_content">
 			<div class="content_row">
 				<div class="row_lable">供货价</div>
-				<div class="row_price">¥{{goods_info.cost_price}}</div>
+				<div class="row_price">¥{{goods_info.supply_price}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">建议零售价</div>
-				<div class="row_value">¥{{goods_info.cost_price}}</div>
+				<div class="row_value">¥{{goods_info.supply_price}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">控价</div>
-				<div class="row_value">¥{{goods_info.cost_price}}</div>
+				<div class="row_value">¥{{goods_info.supply_price}}</div>
 			</div>
 			<!-- <div class="content_row" v-if="goods_info.supplier_ksbm != ''">
 				<div class="row_lable">供应商款式编码</div>
@@ -44,11 +44,11 @@
 			</div>
 			<div class="content_row">
 				<div class="row_lable">浏览量</div>
-				<div class="row_value">{{goods_info.fabric}}</div>
+				<div class="row_value">{{goods_info.views_num}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">销量</div>
-				<div class="row_value">{{goods_info.fabric}}</div>
+				<div class="row_value">{{goods_info.sales_num_all}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">网盘地址</div>
@@ -95,7 +95,7 @@
 		methods:{
 			//点击下载数据包
 			downLoadFile(){
-
+				window.open(this.goods_info.zip_url);
 			},
 			//点击加入购物车
 			addCar(){

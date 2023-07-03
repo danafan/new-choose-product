@@ -272,16 +272,6 @@
 				if(sort_arr.length > 0){
 					arg[sort_arr[0].key] = sort_arr[0].val + '-' + sort_arr[0].sort;
 				}
-
-				//处理款式分类
-				if(this.page_type != 'gys_supplier'){
-					arg.depth_inventory = this.cate_style_list[0].is_selected;
-					arg.video_style = this.cate_style_list[1].is_selected;
-					arg.hot_style = this.cate_style_list[2].is_selected;
-					arg.data_style = this.cate_style_list[3].is_selected;
-					arg.sole_style = this.cate_style_list[4].is_selected;
-					arg.again_style = this.cate_style_list[5].is_selected;
-				}
 				//处理类目
 				if(this.category_index > 0){
 					arg.category_id = this.category_list[this.category_index].category_id;

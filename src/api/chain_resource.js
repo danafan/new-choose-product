@@ -93,6 +93,7 @@ let path = {
   addProductStyle:'api/productstyle/addproductstyle',     //添加款式资料
   editProductStyle:'api/productstyle/editproductstyle',   //款式资料详情/编辑
   auditGoodsList:'api/productstyle/audit_goods',          //待审核款式资料列表
+  homeGoodsInfo:'api/home/goods_info',                     //首页商品详情
 };  
 export default {
   //类目列表接口
@@ -503,5 +504,9 @@ export default {
   //待审核款式资料列表
   auditGoodsList(params) {
     return http.get(path.auditGoodsList, params);
+  },
+  //首页商品详情
+  homeGoodsInfo(params) {
+    return http.get(path.homeGoodsInfo, params);
   },
 };

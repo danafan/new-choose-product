@@ -2,36 +2,41 @@
 	<div>
 		<div class="detail_title">SKU编码表</div>
 		<div class="detail_box" >
-			<el-table size="mini" :data="sku_data" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}">
+			<el-table size="mini" :data="goods_info.sku" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}">
 				<el-table-column prop="color" label="颜色" width="180"></el-table-column>
 				<el-table-column prop="size" label="尺码" width="180"></el-table-column>
-				<el-table-column prop="sku" label="SKU编码"></el-table-column>
+				<el-table-column prop="sku_code" label="SKU编码"></el-table-column>
 			</el-table>
 		</div>
 		<div class="detail_title">商品风格图</div>
 		<div class="detail_box">
-			<!-- <el-image :z-index="2006" class="style_image" :src="item" fit="scale-down" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
-				<div class="style_image" v-if="style_image_list.length%2 > 0"></div> -->
+			<div>
+				<div class="flex border_bottom">
+					<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
+						<div>{{item.shooting_style_name}}</div>
+					</div>
+				</div>
+				<UploadFile v-if="show_style_upload && style_card_list.length > 0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" :only_view="true"/>
+				</div>
 			</div>
 			<div class="detail_title">商品详情图</div>
 			<div class="detail_box">
-
+				<UploadFile :img_list="goods_info.detail_imgs
+				" :only_view="true"/>
 			</div>
 		</div>
 	</template>
 	<script>
+		import UploadFile from '../../../components/upload_file.vue'
 		export default{
 			data(){
 				return{
 					max_height:0,
-					active_style_index:0,			//当前选中的风格下标
-					shooting_style_name:"",
-					style_image_list:[],			//图片列表
-					sku_data:[{
-						color:'黑色',
-						size:'xl',
-						sku:'23123'
-					}]
+					style_card_list:[],				//风格列表
+					selected_style:[],				//表格已选中的列表
+					style_table_data:[],			//未选择的风格列表
+					active_style_index:0,			//风格列表选中的下标
+					show_style_upload:true,			//是否显示风格图图片组件
 				}
 			},
 			props:{
@@ -74,21 +79,38 @@
 				},
 			//设置默认元素
 				setInfoFn(){
-					let style_img = this.goods_info.style_img;
-					this.shooting_style_name = style_img.shooting_style_name;
-					let images = [];
-					if( this.goods_info.style_img.length == 0){
-						return;
-					}
-					style_img.img.map((item,index) => {
-						images.push(this.domain + item);
+					let style_imgs = this.goods_info.style_imgs;			//风格图
+					style_imgs.map(item => {
+						item['image_arr'] = item.img;
+						delete item.img;
 					})
-					this.style_image_list = images;
+					this.style_card_list = style_imgs;
+					// let style_img = this.goods_info.style_img;
+					// this.shooting_style_name = style_img.shooting_style_name;
+					// let images = [];
+					// if( this.goods_info.style_img.length == 0){
+					// 	return;
+					// }
+					// style_img.img.map((item,index) => {
+					// 	images.push(this.domain + item);
+					// })
+					// this.style_image_list = images;
+				},
+				//点击切换已选的风格
+				checkStyleTab(index){
+					this.show_style_upload = false;
+					this.active_style_index = index;
+					this.$nextTick(()=>{
+						this.show_style_upload = true;
+					})
 				},
 			//跳转
 				windowOpen(link){
 					window.open(link);
 				}
+			},
+			components:{
+				UploadFile
 			}
 		}
 	</script>
@@ -107,6 +129,22 @@
 			padding-bottom: 30rem;
 			padding-left: 30rem;
 			padding-right: 30rem;
+		}
+		.style_item{
+			border: 1px solid #DDDDDD;
+			padding: 10rem 20rem;
+			font-size: 14rem;
+			color: #333333;
+			position:relative;
+		}
+		.active_item{
+			border: 1px solid #FFC998;
+			background: #FFFCFA;
+			color: #E47A1A;
+		}
+		.border_bottom{
+			border-bottom:1px solid #DDDDDD;
+			margin-bottom: 20px;
 		}
 	</style>
 
