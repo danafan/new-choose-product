@@ -94,6 +94,7 @@ let path = {
   editProductStyle:'api/productstyle/editproductstyle',   //款式资料详情/编辑
   auditGoodsList:'api/productstyle/audit_goods',          //待审核款式资料列表
   homeGoodsInfo:'api/home/goods_info',                     //首页商品详情
+  editSupplierStatus:'api/supplier_manager/edit_status',  //供应商转正/取消转正
 };  
 export default {
   //类目列表接口
@@ -508,5 +509,9 @@ export default {
   //首页商品详情
   homeGoodsInfo(params) {
     return http.get(path.homeGoodsInfo, params);
+  },
+  //供应商转正/取消转正
+  editSupplierStatus(params) {
+    return http.post(path.editSupplierStatus, params);
   },
 };

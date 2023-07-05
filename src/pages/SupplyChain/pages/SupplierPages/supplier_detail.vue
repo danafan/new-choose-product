@@ -47,6 +47,12 @@
 					<el-form-item label="核心供应商：">
 						{{data_info.is_core==1?'是':'否'}}
 					</el-form-item>
+					<el-form-item label="市场：">
+						{{data_info.market_name}}
+					</el-form-item>
+					<el-form-item label="合作模式：">
+						{{data_info.mode}}
+					</el-form-item>
 					<el-form-item label="供应商等级：">
 						{{data_info.grade_name}}
 					</el-form-item>

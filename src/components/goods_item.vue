@@ -22,7 +22,7 @@
 		<div class="flex ac jsb">
 			<div class="flex ac f12">
 				<div class="dark">分销价：</div>
-				<div class="primary_color">¥{{info.price_control}}</div>
+				<div class="primary_color">¥{{info.distribution_price}}</div>
 			</div>
 			<div class="flex ac f12">
 				<div class="dark">控价：</div>
@@ -30,7 +30,7 @@
 			</div>
 			<div class="flex ac f12">
 				<div class="dark">建议售卖价：</div>
-				<div class="primary_color">¥{{info.price_control}}</div>
+				<div class="primary_color">¥{{info.msrp}}</div>
 			</div>
 		</div>
 		<div class="line mt-6 mb-6"></div>

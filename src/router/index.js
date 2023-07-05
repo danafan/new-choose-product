@@ -14,7 +14,6 @@ const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chai
 const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
 const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
 const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
-const account_list = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/account_list"], resolve);
 const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
 const setting_record_page = (resolve) => require(["@/pages/SupplyChain/pages/setting_record_page"], resolve);
@@ -72,7 +71,8 @@ const router = new Router({
       path: "/chain_supplier_page",
       name: "供应商",
       meta:{
-        is_back:true
+        keep_alive:true,
+        use_cache:false
       },
       component: chain_supplier_page
     },
